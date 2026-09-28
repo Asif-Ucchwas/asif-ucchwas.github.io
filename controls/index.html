@@ -299,12 +299,18 @@ footer{padding:26px 0 40px;color:var(--soft);font-size:.84rem}
 .ongoing .note{margin-top:4px}
 .crosslink{color:var(--soft)}
 .crosslink a{color:var(--good);font-weight:600}
+/* controls hero photo: subject stands left of frame, so keep the left fade short */
+.hero-photo img{object-position:30% 55%}
+@media (min-width:861px){.hero-photo::after{background:
+  linear-gradient(90deg,var(--bg) 0%,color-mix(in srgb,var(--bg) 80%,transparent) 5%,color-mix(in srgb,var(--bg) 40%,transparent) 11%,color-mix(in srgb,var(--bg) 12%,transparent) 17%,transparent 24%),
+  linear-gradient(0deg,var(--bg) 0%,transparent 22%),
+  linear-gradient(180deg,color-mix(in srgb,var(--bg) 40%,transparent) 0%,transparent 16%)}}
 
 </style>
 </head>
 <body>
 <header class="hero">
-  <div class="hero-photo"><img src="../photo.jpg" alt="Md Asifuzzaman at his graduation" width="1100" height="1481"></div>
+  <div class="hero-photo"><img src="photo.jpg" alt="Md Asifuzzaman on a hilltop overlooking a river" width="1100" height="1669"></div>
   <div class="wrap hero-inner">
     <div class="hero-text">
       <h1><span class="ln kicker">Why You Consider Me As</span><span class="ln a">A</span><span class="ln hl">Controls Engineer</span></h1>
