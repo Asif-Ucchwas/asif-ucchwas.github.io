@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Why You Consider Me As A Controls Engineer · Md Asifuzzaman</title>
+<meta name="description" content="Controls engineer: PD, feedforward and constrained MPC benchmarked over 600 trials, a 1 kHz Zephyr RTOS control loop, fault-tolerant safety logic, and a live demo.">
+<meta property="og:title" content="Why You Consider Me As A Controls Engineer · Md Asifuzzaman">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://asif-ucchwas.github.io/controls/">
+<meta property="og:image" content="https://asif-ucchwas.github.io/controls/preview.png?v=1">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://asif-ucchwas.github.io/controls/preview.png?v=1">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎛️</text></svg>">
+<meta property="og:description" content="Controls engineer: PD, feedforward and MPC benchmarked over 600 trials, a 1 kHz Zephyr RTOS loop, fault-tolerant safety logic, and a live demo to try.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Playfair+Display:wght@700;900&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F3F5F2; --panel:#FFFFFF; --ink:#141C25; --soft:#586472; --line:#DCE2DD;
+  --lane:#D9950F; --lane-soft:#FBEFD2; --good:#1F7A6E; --good-soft:#DDF0EC; --bad:#C2334D; --bad-soft:#F8E3E7;
+  --obs:#1D2733; --tree-a:rgba(194,51,77,.35); --tree-b:rgba(31,122,110,.38); --corr:rgba(217,149,15,.14); --grid:rgba(20,28,37,.06);
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --cond:"IBM Plex Sans Condensed","Arial Narrow",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Consolas,monospace;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+  --bg:#0C1117; --panel:#131B24; --ink:#E7EDF1; --soft:#98A6B3; --line:#223040;
+  --lane:#F2B63C; --lane-soft:#33290F; --good:#4FC2AF; --good-soft:#12302B; --bad:#EE6A80; --bad-soft:#3A1A22;
+  --obs:#2C3B4C; --tree-a:rgba(238,106,128,.38); --tree-b:rgba(79,194,175,.42); --corr:rgba(242,182,60,.12); --grid:rgba(231,237,241,.05);
+}}
+:root[data-theme="dark"]{
+  --bg:#0C1117; --panel:#131B24; --ink:#E7EDF1; --soft:#98A6B3; --line:#223040;
+  --lane:#F2B63C; --lane-soft:#33290F; --good:#4FC2AF; --good-soft:#12302B; --bad:#EE6A80; --bad-soft:#3A1A22;
+  --obs:#2C3B4C; --tree-a:rgba(238,106,128,.38); --tree-b:rgba(79,194,175,.42); --corr:rgba(242,182,60,.12); --grid:rgba(231,237,241,.05);
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16.5px;line-height:1.6}
+a{color:inherit}
+button,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--lane);outline-offset:3px;border-radius:4px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 22px}
+section{padding:64px 0}
+.eyebrow{font-size:.85rem;font-weight:600;color:var(--lane);margin:0 0 8px}
+h2{font-family:var(--cond);font-weight:700;font-size:clamp(1.9rem,4vw,2.7rem);line-height:1.05;margin:0 0 12px}
+.sub{color:var(--soft);max-width:62ch;margin:0 0 28px}
+
+/* hero */
+.hero{padding:56px 0 36px}
+.hero-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:36px;align-items:end}
+@media (max-width:860px){.hero-grid{grid-template-columns:1fr}}
+.hero h1{font-family:var(--cond);font-weight:700;font-size:clamp(2.4rem,5.4vw,4rem);line-height:1;margin:0 0 16px;letter-spacing:-.01em}
+.hero h1 span{color:inherit}
+.hero .name{font-family:var(--cond);font-weight:600;font-size:1.5rem;margin:0 0 14px}
+.hero p.lede{font-size:1.12rem;max-width:56ch;margin:0 0 20px}
+.auth{display:inline-block;font-size:.88rem;padding:7px 13px;border:1px solid var(--line);border-radius:14px;color:var(--soft);margin-bottom:22px;background:var(--panel)}
+.links{display:flex;flex-wrap:wrap;gap:10px}
+.btn{display:inline-flex;align-items:center;gap:8px;text-decoration:none;border-radius:10px;padding:10px 16px;font-weight:600;font-size:.95rem;border:1px solid var(--line);background:var(--panel)}
+.btn.primary{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btn:hover{border-color:var(--soft)}
+.facts{display:grid;gap:10px}
+.fact{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 16px;display:flex;justify-content:space-between;gap:14px;align-items:baseline}
+.fact span{color:var(--soft);font-size:.9rem}
+.fact b{font-family:var(--cond);font-size:1.15rem;text-align:right}
+
+/* demo */
+.demo{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px}
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;padding:3px}
+.seg button{border:0;background:transparent;padding:7px 13px;border-radius:7px;cursor:pointer;font-weight:500;color:var(--soft)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.cbtn{border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:8px 14px;cursor:pointer;font-weight:600}
+.cbtn.go{background:var(--lane);border-color:var(--lane);color:#1a1300}
+.cbtn:disabled{opacity:.5;cursor:default}
+.boards{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:820px){.boards{grid-template-columns:1fr}}
+.board h3{margin:0 0 6px;font-size:1rem;display:flex;align-items:center;gap:8px}
+.board h3 i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.board canvas{width:100%;height:auto;display:block;border-radius:12px;border:1px solid var(--line);background:var(--bg)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+.stat{border:1px solid var(--line);border-radius:10px;padding:7px 10px}
+.stat span{display:block;font-size:.75rem;color:var(--soft)}
+.stat b{font-family:var(--cond);font-size:1.2rem;font-variant-numeric:tabular-nums}
+.status-ok{color:var(--good)} .status-no{color:var(--bad)}
+.trials{margin-top:16px;border-top:1px dashed var(--line);padding-top:14px;display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:center}
+@media (max-width:640px){.trials{grid-template-columns:1fr}}
+.tbars{display:grid;gap:8px}
+.tbar{display:grid;grid-template-columns:150px 1fr 56px;gap:10px;align-items:center;font-size:.88rem}
+@media (max-width:460px){.tbar{grid-template-columns:100px 1fr 48px}}
+.track{height:14px;background:var(--bg);border:1px solid var(--line);border-radius:99px;overflow:hidden}
+.track i{display:block;height:100%;width:0;transition:width .4s}
+.tbar b{font-variant-numeric:tabular-nums;text-align:right}
+.note{font-size:.84rem;color:var(--soft);margin:12px 0 0}
+
+/* results */
+.results{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media (max-width:860px){.results{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:500px){.results{grid-template-columns:1fr}}
+.res{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px}
+.res .big{font-family:var(--cond);font-weight:700;font-size:2.6rem;line-height:1;font-variant-numeric:tabular-nums}
+.res .lbl{color:var(--soft);font-size:.92rem;margin-top:6px}
+.res .cmp{display:grid;gap:6px;margin-top:12px}
+.res .row{display:grid;grid-template-columns:78px 1fr 44px;gap:8px;align-items:center;font-size:.82rem}
+.res .row .track{height:10px}
+.res.wide{grid-column:span 2}
+@media (max-width:500px){.res.wide{grid-column:auto}}
+
+/* fit */
+.fit{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+@media (max-width:760px){.fit{grid-template-columns:1fr}}
+.fitc{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px 20px;border-top:4px solid var(--lane)}
+.fitc h3{margin:0 0 4px;font-size:1.08rem}
+.fitc .req{font-size:.85rem;color:var(--soft);margin:0 0 10px}
+.fitc ul{margin:0;padding-left:18px}
+.fitc li{margin-bottom:5px}
+
+/* projects */
+.projects{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+@media (max-width:760px){.projects{grid-template-columns:1fr}}
+.proj{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px 20px;display:flex;flex-direction:column}
+.proj.lead{grid-column:1/-1;border-color:var(--lane)}
+.proj h3{margin:0 0 6px;font-family:var(--cond);font-size:1.4rem;line-height:1.15}
+.proj p{margin:0 0 10px;color:var(--soft)}
+.proj ul{margin:0 0 12px;padding-left:18px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto}
+.chip{font-family:var(--mono);font-size:.76rem;padding:3px 9px;border-radius:99px;background:var(--bg);border:1px solid var(--line)}
+.metric{display:inline-block;font-weight:600;color:var(--good)}
+
+/* stack */
+.stack{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media (max-width:860px){.stack{grid-template-columns:1fr}}
+.stk{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px 18px}
+.stk h3{margin:0 0 10px;font-size:1rem}
+
+/* timeline / pubs */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+@media (max-width:860px){.two{grid-template-columns:1fr}}
+.tl{list-style:none;margin:0;padding:0;border-left:2px solid var(--line)}
+.tl li{position:relative;padding:0 0 18px 18px}
+.tl li::before{content:"";position:absolute;left:-7px;top:6px;width:12px;height:12px;border-radius:50%;background:var(--bg);border:2px solid var(--lane)}
+.tl b{display:block}
+.tl span{color:var(--soft);font-size:.9rem}
+.pub{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:10px}
+.pub b{display:block;line-height:1.35}
+.pub span{color:var(--soft);font-size:.9rem}
+.pub a{color:var(--good);font-weight:600;font-size:.9rem}
+
+/* contact */
+.cta{background:var(--ink);color:var(--bg);border-radius:20px;padding:34px 28px;display:flex;flex-wrap:wrap;gap:20px;align-items:center;justify-content:space-between}
+.cta h2{margin:0}
+.cta p{margin:6px 0 0;opacity:.8}
+.cta .btn{background:transparent;color:var(--bg);border-color:rgba(255,255,255,.35)}
+.cta .btn.primary{background:var(--lane);color:#1a1300;border-color:var(--lane)}
+footer{padding:26px 0 40px;color:var(--soft);font-size:.84rem}
+.pillar{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 16px;border-left:4px solid var(--lane)}
+.pillar b{display:block;font-family:var(--cond);font-size:1.25rem;line-height:1.1}
+.pillar span{color:var(--soft);font-size:.92rem}
+.res.full{grid-column:1/-1}
+.res.full .big{font-size:2rem}
+.proj a{color:var(--good);font-weight:600}
+.road{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media (max-width:860px){.road{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:520px){.road{grid-template-columns:1fr}}
+.step{background:var(--panel);border:1px dashed var(--soft);border-radius:16px;padding:16px 18px}
+.step h3{margin:6px 0 6px;font-size:1.05rem}
+.step p{margin:0;color:var(--soft);font-size:.93rem}
+.step p.locked{font-style:italic}
+.tagn{font-size:.75rem;font-weight:600;padding:2px 9px;border-radius:99px;background:var(--lane-soft);color:var(--lane)}
+.cta a.mail{color:var(--lane);font-weight:600;word-break:break-all}
+@media (min-width:861px){.hero-grid{grid-template-columns:1.15fr .85fr;align-items:center}}
+.portrait{position:relative;margin:0;border-radius:26px;overflow:hidden;border:1px solid var(--line);aspect-ratio:3/4;max-height:620px;box-shadow:0 24px 60px rgba(0,0,0,.28)}
+.portrait img{width:100%;height:100%;object-fit:cover;object-position:50% 20%;display:block}
+
+.portrait figcaption{position:absolute;left:18px;right:18px;bottom:16px;z-index:1;color:#fff;font-family:var(--cond);font-weight:600;font-size:1.15rem;line-height:1.25}
+.portrait figcaption span{display:block;font-family:var(--sans);font-weight:400;font-size:.88rem;opacity:.85}
+@media (max-width:860px){.portrait{width:100%;max-width:420px;max-height:520px;order:-1}}
+.pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:34px}
+@media (max-width:760px){.pillars{grid-template-columns:1fr}}
+.hero h1{font-family:"Playfair Display",Georgia,"Times New Roman",serif;font-weight:900;letter-spacing:-.005em;line-height:1.02}
+.hero .name{font-family:"Playfair Display",Georgia,"Times New Roman",serif;font-weight:700;font-size:1.7rem}
+.badges{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px}
+.badge{display:inline-flex;align-items:center;border-radius:10px;padding:10px 16px;font-weight:600;font-size:.95rem;border:1px solid var(--line);background:var(--panel)}
+.badge.key{border-color:var(--lane);color:var(--lane)}
+.cta-row{margin:0 0 10px}
+.social{display:flex;flex-wrap:nowrap;gap:10px}
+.social .btn{flex:0 0 auto}
+@media (max-width:420px){.social{gap:6px}.social .btn{padding:9px 12px;font-size:.9rem}.badge{padding:9px 13px;font-size:.9rem}}
+.hero h1 .ln{display:block;white-space:nowrap}
+.hero h1 .hl{color:var(--lane)}
+.hero h1{font-size:clamp(1.7rem,6.9vw,3rem);line-height:1.08}
+/* ---------- cinematic hero ---------- */
+.hero{position:relative;overflow:hidden;padding:0;min-height:min(94vh,800px);display:flex;flex-direction:column;justify-content:center}
+.hero-photo{position:absolute;top:0;right:0;bottom:0;width:52%;z-index:0}
+.hero-photo img{width:100%;height:100%;object-fit:cover;object-position:55% 22%;display:block}
+.hero-photo::after{content:"";position:absolute;inset:0;background:
+  linear-gradient(90deg,var(--bg) 0%,color-mix(in srgb,var(--bg) 70%,transparent) 14%,color-mix(in srgb,var(--bg) 15%,transparent) 34%,transparent 50%),
+  linear-gradient(0deg,var(--bg) 0%,transparent 26%),
+  linear-gradient(180deg,color-mix(in srgb,var(--bg) 55%,transparent) 0%,transparent 18%)}
+.hero-inner{position:relative;z-index:1;padding-top:70px;padding-bottom:20px;width:100%}
+.hero-text{max-width:620px}
+.hero h1{font-family:"Playfair Display",Georgia,"Times New Roman",serif;font-weight:900;font-size:clamp(1.8rem,6.6vw,3.5rem);line-height:1.04;margin:0 0 18px;text-shadow:0 2px 24px color-mix(in srgb,var(--bg) 70%,transparent)}
+.hero h1 .ln{display:block;white-space:nowrap}
+.hero h1 .a{font-style:italic;font-weight:700;color:var(--soft);font-size:.62em;line-height:1.2}
+.hero h1 .hl{color:var(--lane)}
+.hero .rule{width:84px;height:4px;background:var(--lane);border-radius:4px;margin:0 0 16px}
+.hero .pillars{position:relative;z-index:1;margin-top:26px;padding-bottom:40px;width:100%}
+.hero .pillar{background:color-mix(in srgb,var(--panel) 88%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+@media (max-width:860px){
+  .hero{min-height:0}
+  .hero-photo{position:relative;width:100%;height:62vh;max-height:560px}
+  .hero-photo img{object-position:50% 25%}
+  .hero-photo::after{background:linear-gradient(0deg,var(--bg) 0%,var(--bg) 6%,color-mix(in srgb,var(--bg) 55%,transparent) 20%,transparent 38%)}
+  .hero-inner{margin-top:-56px;padding-top:0}
+}
+
+:root{--c-astar:rgba(90,141,238,.28);--c-astar-solid:#5A8DEE;--c-rrt:rgba(155,120,230,.38);--c-rrt-solid:#9B78E6}
+.boards{grid-template-columns:1fr 1fr}
+.hero h1{font-size:clamp(2rem,7.2vw,3.5rem);margin:0 0 6px}
+.hero-text{max-width:720px}
+.hero h1 .kicker{font-family:var(--sans);font-weight:700;text-transform:uppercase;letter-spacing:.14em;font-size:.34em;color:var(--ink);margin-bottom:.35em;opacity:.9}
+.hero h1 .a{font-style:italic;font-weight:700;color:var(--lane);font-size:.72em;line-height:1;margin:-.05em 0 .02em}
+.hero h1 .hl{background:linear-gradient(92deg,var(--lane) 0%,#FF8A3D 60%,var(--lane) 100%);-webkit-background-clip:text;background-clip:text;color:transparent;padding-bottom:.06em}
+.traj{display:block;width:min(100%,640px);height:auto;margin:2px 0 18px;overflow:visible}
+.traj path{fill:none;stroke:var(--lane);stroke-width:3;stroke-linecap:round;stroke-dasharray:760;stroke-dashoffset:760;animation:trajDraw 2.4s cubic-bezier(.3,0,.2,1) .4s forwards}
+.traj .traj-start{fill:var(--good)} .traj .traj-goal{fill:none;stroke:var(--good);stroke-width:3} .traj .traj-car{fill:var(--ink)}
+@keyframes trajDraw{to{stroke-dashoffset:0}}
+.hero-text > *{animation:rise .8s cubic-bezier(.2,.7,.2,1) both}
+.hero-text > *:nth-child(2){animation-delay:.08s}.hero-text > *:nth-child(3){animation-delay:.16s}.hero-text > *:nth-child(4){animation-delay:.24s}.hero-text > *:nth-child(5){animation-delay:.32s}.hero-text > *:nth-child(6){animation-delay:.4s}.hero-text > *:nth-child(7){animation-delay:.48s}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.hero-text > *{animation:none}.traj path{animation:none;stroke-dashoffset:0}.traj .traj-car{display:none}}
+.hero h1{text-shadow:none}
+.hero h1 .hl{filter:drop-shadow(0 2px 18px rgba(242,182,60,.18))}
+
+.hero h1 .a{font-style:normal;font-weight:900;color:var(--ink);font-size:.62em;line-height:1.05;margin:.02em 0 .04em}
+.hero .name{text-transform:uppercase;letter-spacing:.08em;font-size:1.45rem}
+.pass{display:grid;grid-template-columns:auto 1.25fr 1.35fr;margin:4px 0 20px;background:var(--panel);border:1px solid var(--line);border-radius:16px;position:relative;max-width:640px;box-shadow:0 10px 30px rgba(0,0,0,.12)}
+.pass-seg{padding:12px 16px;display:flex;flex-direction:column;justify-content:center;position:relative;min-width:0}
+.pass-seg + .pass-seg{border-left:2px dashed var(--line)}
+.pass-seg + .pass-seg::before,.pass-seg + .pass-seg::after{content:"";position:absolute;left:-9px;width:16px;height:16px;border-radius:50%;background:var(--bg);border:1px solid var(--line)}
+.pass-seg + .pass-seg::before{top:-9px}.pass-seg + .pass-seg::after{bottom:-9px}
+.pass-lbl{font-size:.7rem;text-transform:uppercase;letter-spacing:.12em;color:var(--soft);font-weight:600}
+.pass b{font-size:1rem;line-height:1.3;display:flex;align-items:center;gap:6px}
+.pass-seg:first-child b{font-family:"Playfair Display",Georgia,serif;font-size:1.7rem;font-weight:900;color:var(--lane);line-height:1}
+.pass-note{font-size:.8rem;color:var(--soft);margin-top:2px}
+.plane{width:16px;height:16px;fill:var(--lane);transform:rotate(45deg);flex:none}
+@media (max-width:620px){
+  .pass{grid-template-columns:1fr}
+  .pass-seg + .pass-seg{border-left:0;border-top:2px dashed var(--line)}
+  .pass-seg + .pass-seg::before{top:-9px;left:-9px}.pass-seg + .pass-seg::after{top:-9px;bottom:auto;left:auto;right:-9px}
+}
+@media (max-width:620px){.hero h1{font-size:6.1vw}.hero h1 .kicker{font-size:.42em}.hero h1 .a{font-size:.7em}}
+
+.hero-photo{width:45%}
+.hero{min-height:min(88vh,760px)}
+.hero-inner{padding-bottom:60px}
+.pillars-sec{padding:8px 0 10px}
+.pillars-sec .pillars{margin-top:0}
+@media (min-width:861px){
+  .hero-text{max-width:calc(55vw - max(22px, (100vw - 1120px) / 2 + 22px) - 28px)}
+  .hero h1{font-size:min(3.5rem, calc((55vw - max(22px, (100vw - 1120px) / 2 + 22px) - 28px) / 12.8))}
+  .pass{max-width:100%}
+}
+@media (max-width:860px){.hero-photo{width:100%}}
+@media (max-width:820px){.boards{grid-template-columns:1fr}}
+
+/* ---------- controls page additions ---------- */
+.traj path{stroke-dasharray:640;stroke-dashoffset:640}
+.traj .setpoint{fill:none;stroke:var(--soft);stroke-width:1.5;stroke-dasharray:5 6;opacity:.55;animation:none}
+.toggle{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:10px;padding:7px 12px;cursor:pointer;font-weight:500;background:var(--bg);user-select:none}
+.toggle input{accent-color:var(--lane);width:16px;height:16px;margin:0}
+.plot{width:100%;height:auto;display:block;border-radius:12px;border:1px solid var(--line);background:var(--bg)}
+.legend{display:flex;flex-wrap:wrap;gap:14px;margin:10px 0 0;font-size:.88rem;color:var(--soft)}
+.legend i{display:inline-block;width:18px;height:3px;border-radius:2px;vertical-align:middle;margin-right:6px}
+.legend i.dash{background:repeating-linear-gradient(90deg,var(--soft) 0 5px,transparent 5px 9px)}
+.ctrl-stats{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+@media (max-width:640px){.ctrl-stats{grid-template-columns:1fr}}
+.ctrl-stats h3{margin:0 0 6px;font-size:1rem;display:flex;align-items:center;gap:8px}
+.ctrl-stats h3 i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.ongoing{background:var(--panel);border:1px solid var(--lane);border-radius:18px;padding:22px 22px 18px}
+.ongoing-head{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:6px}
+.ongoing h3{margin:0;font-family:var(--cond);font-size:1.6rem;line-height:1.1}
+.live-tag{display:inline-flex;align-items:center;gap:7px;font-size:.78rem;font-weight:600;padding:3px 10px;border-radius:99px;background:var(--lane-soft);color:var(--lane)}
+.live-tag::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--lane);animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.25}}
+@media (prefers-reduced-motion:reduce){.live-tag::before{animation:none}}
+.ongoing > p{color:var(--soft);margin:0 0 16px;max-width:70ch}
+.plan{list-style:none;margin:0 0 16px;padding:0;display:grid;grid-template-columns:repeat(2,1fr);gap:10px 18px;counter-reset:st}
+@media (max-width:760px){.plan{grid-template-columns:1fr}}
+.plan li{counter-increment:st;position:relative;padding:10px 12px 10px 46px;border:1px solid var(--line);border-radius:12px;background:var(--bg)}
+.plan li::before{content:counter(st);position:absolute;left:12px;top:10px;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-family:var(--cond);font-weight:700;font-size:.9rem;border:2px solid var(--lane);color:var(--lane)}
+.plan b{display:block;line-height:1.3}
+.plan span{color:var(--soft);font-size:.9rem}
+.ongoing .note{margin-top:4px}
+.crosslink{color:var(--soft)}
+.crosslink a{color:var(--good);font-weight:600}
+
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="hero-photo"><img src="../photo.jpg" alt="Md Asifuzzaman at his graduation" width="1100" height="1481"></div>
+  <div class="wrap hero-inner">
+    <div class="hero-text">
+      <h1><span class="ln kicker">Why You Consider Me As</span><span class="ln a">A</span><span class="ln hl">Controls Engineer</span></h1>
+      <svg class="traj" viewBox="0 0 640 46" aria-hidden="true">
+        <line class="setpoint" x1="8" y1="16" x2="632" y2="16"/>
+        <path id="trajPath" d="M8.0 40.0 L13.2 39.9 L18.3 39.7 L23.5 39.4 L28.7 39.0 L33.8 38.5 L39.0 37.9 L44.2 37.2 L49.3 36.4 L54.5 35.6 L59.7 34.7 L64.8 33.8 L70.0 32.8 L75.2 31.8 L80.3 30.8 L85.5 29.7 L90.7 28.7 L95.8 27.6 L101.0 26.5 L106.2 25.5 L111.3 24.4 L116.5 23.4 L121.7 22.4 L126.8 21.4 L132.0 20.5 L137.2 19.6 L142.3 18.7 L147.5 17.9 L152.7 17.1 L157.8 16.3 L163.0 15.6 L168.2 14.9 L173.3 14.3 L178.5 13.8 L183.7 13.2 L188.8 12.8 L194.0 12.3 L199.2 11.9 L204.3 11.6 L209.5 11.3 L214.7 11.1 L219.8 10.9 L225.0 10.7 L230.2 10.6 L235.3 10.5 L240.5 10.4 L245.7 10.4 L250.8 10.4 L256.0 10.4 L261.2 10.5 L266.3 10.6 L271.5 10.7 L276.7 10.9 L281.8 11.0 L287.0 11.2 L292.2 11.4 L297.3 11.6 L302.5 11.8 L307.7 12.0 L312.8 12.3 L318.0 12.5 L323.2 12.8 L328.3 13.0 L333.5 13.3 L338.7 13.5 L343.8 13.7 L349.0 14.0 L354.2 14.2 L359.3 14.5 L364.5 14.7 L369.7 14.9 L374.8 15.1 L380.0 15.3 L385.2 15.5 L390.3 15.7 L395.5 15.9 L400.7 16.1 L405.8 16.2 L411.0 16.4 L416.2 16.5 L421.3 16.6 L426.5 16.7 L431.7 16.8 L436.8 16.9 L442.0 17.0 L447.2 17.1 L452.3 17.1 L457.5 17.2 L462.7 17.2 L467.8 17.3 L473.0 17.3 L478.2 17.3 L483.3 17.3 L488.5 17.3 L493.7 17.3 L498.8 17.3 L504.0 17.3 L509.2 17.2 L514.3 17.2 L519.5 17.2 L524.7 17.1 L529.8 17.1 L535.0 17.0 L540.2 17.0 L545.3 16.9 L550.5 16.9 L555.7 16.8 L560.8 16.8 L566.0 16.7 L571.2 16.7 L576.3 16.6 L581.5 16.5 L586.7 16.5 L591.8 16.4 L597.0 16.4 L602.2 16.3 L607.3 16.3 L612.5 16.2 L617.7 16.2 L622.8 16.1 L628.0 16.1" />
+        <circle class="traj-start" cx="8" cy="40" r="6"/>
+        <circle class="traj-goal" cx="628" cy="16" r="6"/>
+        <circle class="traj-car" r="5"><animateMotion dur="2.4s" begin="0.4s" fill="freeze" calcMode="spline" keyTimes="0;1" keySplines="0.3 0 0.2 1"><mpath href="#trajPath"/></animateMotion></circle>
+      </svg>
+      <p class="name">Md Asifuzzaman</p>
+      <div class="pass" aria-label="Work authorization">
+        <div class="pass-seg"><b>F-1</b><span class="pass-lbl">OPT (STEM)</span></div>
+        <div class="pass-seg"><b>Authorized to work in the U.S.</b></div>
+        <div class="pass-seg"><span class="pass-lbl">Flew</span><b>13,000 miles <svg class="plane" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg></b><span class="pass-note">So Hawaii or Alaska doesn't matter</span></div>
+      </div>
+      <div class="cta-row"><a class="btn primary" href="#demo">Try the live controller</a></div>
+      <div class="social">
+        <a class="btn" href="https://github.com/Asif-Ucchwas" target="_blank" rel="noopener">GitHub</a>
+        <a class="btn" href="https://www.linkedin.com/in/masifuzzaman" target="_blank" rel="noopener">LinkedIn</a>
+        <a class="btn" href="mailto:asifuzzamanucchwas@gmail.com" target="_blank" rel="noopener">Email</a>
+      </div>
+    </div>
+  </div>
+</header>
+<section class="pillars-sec">
+  <div class="wrap pillars">
+    <div class="pillar"><b>Model</b><span>State-space plants, pole placement, feedforward from model inversion</span></div><div class="pillar"><b>Control</b><span>PD, feedforward, constrained MPC, Kalman filter estimation</span></div><div class="pillar"><b>Prove</b><span>600-trial benchmarks, fault injection, a 1 kHz real-time loop</span></div>
+  </div>
+</section>
+
+<section id="demo">
+  <div class="wrap">
+    <p class="eyebrow">Live demo</p>
+    <h2>Why a controller that looks best can fail first</h2>
+    <p class="sub">My DC servo plant, tracking a moving reference with the same gains, reference and disturbance as my 600-trial benchmark. Feedforward wins on a clean run. Switch on the disturbance and watch what happens to its peak error.</p>
+    <div class="demo">
+      <div class="controls">
+        <label class="toggle"><input type="checkbox" id="dist"> Unmodeled disturbance</label>
+        <label class="toggle"><input type="checkbox" id="noise"> Sensor noise</label>
+        <button class="cbtn go" id="runCtl">Run both controllers</button>
+      </div>
+      <canvas class="plot" id="plot" width="1040" height="440" aria-label="Shaft angle over time for both controllers against the reference"></canvas>
+      <div class="legend"><span><i class="dash"></i>Reference</span><span><i style="background:var(--c-astar-solid)"></i>Feedback only (pole-placed PD)</span><span><i style="background:var(--lane)"></i>PD + feedforward</span></div>
+      <div class="ctrl-stats">
+        <div>
+          <h3><i style="background:var(--c-astar-solid)"></i>Feedback only (PD)</h3>
+          <div class="stats"><div class="stat"><span>RMS error</span><b id="rP">–</b></div><div class="stat"><span>Peak error</span><b id="mP">–</b></div><div class="stat"><span>Chatter</span><b id="cP">–</b></div></div>
+        </div>
+        <div>
+          <h3><i style="background:var(--lane)"></i>PD + feedforward</h3>
+          <div class="stats"><div class="stat"><span>RMS error</span><b id="rF">–</b></div><div class="stat"><span>Peak error</span><b id="mF">–</b></div><div class="stat"><span>Chatter</span><b id="cF">–</b></div></div>
+        </div>
+      </div>
+      <p class="note">Errors in radians over a 5-second run at 1 kHz. Chatter is the standard deviation of the step-to-step change in motor voltage. This is a direct port of my benchmark code, so the clean and disturbed runs match my published results table. MPC needs a QP solver, so its results are in the measured results below.</p>
+    </div>
+  </div>
+</section>
+
+<section id="results">
+  <div class="wrap">
+    <p class="eyebrow">Measured results</p>
+    <h2>Numbers from real experiments</h2>
+    <p class="sub">Three controllers, four conditions, 50 trials each, plus a real-time port and fault-injection tests. The honest finding: no single controller wins.</p>
+    <div class="results">
+      <div class="res wide">
+        <div class="big">+<span data-count="236">0</span>%</div>
+        <div class="lbl">Rise in peak tracking error under an unmodeled disturbance, for feedforward. Best on a clean run, most fragile when the model is wrong.</div>
+        <div class="cmp">
+          <div class="row"><span>Feedforward</span><div class="track"><i data-bar="100" style="background:var(--bad)"></i></div><b>+236%</b></div>
+          <div class="row"><span>PD</span><div class="track"><i data-bar="15" style="background:var(--c-astar-solid)"></i></div><b>+35%</b></div>
+          <div class="row"><span>MPC</span><div class="track"><i data-bar="6" style="background:var(--good)"></i></div><b>+13%</b></div>
+        </div>
+      </div>
+      <div class="res"><div class="big"><span data-count="87.4" data-dec="1">0</span>%</div><div class="lbl">Lower RMS tracking error from model-inversion feedforward on a moving reference</div></div>
+      <div class="res"><div class="big"><span data-count="14">0</span>×</div><div class="lbl">Less control chatter with MPC than PD under sensor noise</div></div>
+      <div class="res"><div class="big"><span data-count="6.06" data-dec="2">0</span>%</div><div class="lbl">Overshoot, 0.447 s settling and zero steady-state error from my pole-placed PD</div></div>
+      <div class="res"><div class="big"><span data-count="0.48" data-dec="2">0</span> → 0 rad</div><div class="lbl">Final drift after a mid-motion fault: power-cut fallback vs. my active-hold safe state (0.16 rad peak before recovery)</div></div>
+      <div class="res full"><div class="big"><span data-count="0">0</span> of 2,999 deadlines missed</div><div class="lbl">1 kHz Zephyr RTOS control task under competing load, with preemption verified. Measured in simulation (native_sim); real jitter needs real silicon.</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="wrap">
+    <p class="eyebrow">Projects</p>
+    <h2>What I've built</h2>
+    <div class="projects">
+      <article class="proj lead">
+        <h3>ControlLoop-RT: MPC, feedforward and real-time safety</h3>
+        <p>One DC servo plant taken from first principles to a real-time, fault-tolerant control loop. <a href="https://github.com/Asif-Ucchwas/controlloop-rt" target="_blank" rel="noopener">View the repo</a></p>
+        <ul>
+          <li>PID diagnosed as unstable, replaced by pole-placed PD: <span class="metric">6.06% overshoot, 0.447 s settling</span>. Feedforward cut tracking error by <span class="metric">87.4%</span>.</li>
+          <li>Constrained MPC (do-mpc/CasADi, 20-step horizon at 50 Hz): <span class="metric">14× less chatter</span> than PD under noise, and a documented limit: its velocity constraint breaks under an unmodeled disturbance.</li>
+          <li>Ported to a <span class="metric">1 kHz Zephyr RTOS task</span> in C, with a watchdog (fault detected in about 4 ms), dual-sensor voting (200 of 200 faulty samples caught, 0 false alarms) and an active-hold safe state.</li>
+          <li><span class="metric">600-trial benchmark</span> and a documented, not certified, ISO 26262 hazard analysis.</li>
+        </ul>
+        <div class="chips"><span class="chip">Python</span><span class="chip">C</span><span class="chip">Zephyr RTOS</span><span class="chip">do-mpc</span><span class="chip">CasADi</span><span class="chip">python-control</span><span class="chip">pytest</span></div>
+      </article>
+      <article class="proj">
+        <h3>Kalman filter localization</h3>
+        <p>State estimation inside my thesis navigation stack. <a href="https://www.proquest.com/docview/3339828739" target="_blank" rel="noopener">Read the thesis</a></p>
+        <ul><li><span class="metric">44.1% lower localization error</span> from Kalman filter fusion of odometry.</li>
+        <li>Running as live ROS2 nodes on a TurtleBot3 in Gazebo, feeding the planner and controller.</li></ul>
+        <div class="chips"><span class="chip">Kalman filter</span><span class="chip">ROS2 Jazzy</span><span class="chip">Nav2</span><span class="chip">Gazebo</span></div>
+      </article>
+      <article class="proj">
+        <h3>CAN-Net: real-time vehicle networking</h3>
+        <p>The bus a vehicle controller talks over. <a href="https://github.com/Asif-Ucchwas/can-net" target="_blank" rel="noopener">View the repo</a></p>
+        <ul><li>SocketCAN, DBC encoding and the J1939 protocol, with multi-packet transport and diagnostics.</li>
+        <li>Zephyr RTOS bridged to Linux CAN with verified preemption; <span class="metric">360-trial</span> CAN/UDP/TCP benchmark and CI.</li></ul>
+        <div class="chips"><span class="chip">Python</span><span class="chip">C</span><span class="chip">SocketCAN</span><span class="chip">J1939</span><span class="chip">Zephyr</span><span class="chip">GitHub Actions</span></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="stack">
+  <div class="wrap">
+    <p class="eyebrow">Stack</p>
+    <h2>Tools I build with</h2>
+    <div class="stack">
+      <div class="stk"><h3>Modeling and analysis</h3><div class="chips"><span class="chip">State-space</span><span class="chip">Transfer functions</span><span class="chip">Pole placement</span><span class="chip">python-control</span><span class="chip">NumPy / SciPy</span></div></div>
+      <div class="stk"><h3>Control and estimation</h3><div class="chips"><span class="chip">PD / PID</span><span class="chip">Feedforward</span><span class="chip">MPC (do-mpc, CasADi)</span><span class="chip">Kalman filter</span></div></div>
+      <div class="stk"><h3>Real-time and safety</h3><div class="chips"><span class="chip">C</span><span class="chip">Zephyr RTOS</span><span class="chip">Watchdog</span><span class="chip">Sensor voting</span><span class="chip">ISO 26262 (documented)</span><span class="chip">pytest</span><span class="chip">GitHub Actions</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="ongoing">
+  <div class="wrap">
+    <p class="eyebrow">Ongoing</p>
+    <h2>What I'm building now</h2>
+    <p class="sub">Connecting my controls work to my motion planning work: the paths my planners produce, followed by a real controller.</p>
+    <div class="ongoing">
+      <div class="ongoing-head"><h3>TrackLoop: vehicle path tracking</h3><span class="live-tag">In progress</span></div>
+      <p>Four path-tracking controllers on a car model, following paths from my own Hybrid A*–RRT* and Reeds-Shepp planners, benchmarked the same way as ControlLoop-RT.</p>
+      <ol class="plan">
+        <li><b>Vehicle models</b><span>Kinematic and dynamic bicycle models of a car</span></li>
+        <li><b>Four controllers</b><span>Pure Pursuit, Stanley, LQR and linear MPC</span></li>
+        <li><b>Paths from my planners</b><span>Hybrid A*–RRT* and Reeds-Shepp paths as the references to follow</span></li>
+        <li><b>Benchmark</b><span>Lateral and heading error, steering effort and smoothness, at three speeds, with and without model errors</span></li>
+        <li><b>Stability analysis</b><span>Bode plots and gain and phase margins, and where each controller goes unstable as speed rises</span></li>
+        <li><b>System identification</b><span>Estimate the vehicle model from noisy data, then re-test the controllers on it</span></li>
+      </ol>
+      <p class="note">No results yet. Numbers will appear here as each stage is measured, with a full DEVLOG in the repo.</p>
+    </div>
+  </div>
+</section>
+
+<section id="next">
+  <div class="wrap">
+    <p class="eyebrow">Roadmap</p>
+    <h2>What I'll build next</h2>
+    <p class="sub">The gaps I've found between my work so far and a production controls role, and the order I'm closing them in.</p>
+    <div class="road">
+      <div class="step"><span class="tagn">Up next</span><h3>Frequency-domain analysis</h3><p>Bode and Nyquist plots, gain and phase margins, loop shaping</p></div>
+      <div class="step"><span class="tagn">Up next</span><h3>System identification</h3><p>Plant models estimated from measured data</p></div>
+      <div class="step"><span class="tagn">Up next</span><h3>MATLAB and Simulink</h3><p>Rebuilding my controllers in the industry-standard toolchain</p></div>
+      <div class="step"><span class="tagn">Up next</span><h3>Discrete-time design</h3><p>Zero-order hold and Tustin, and how sample rate affects stability</p></div>
+      <div class="step"><span class="tagn">Up next</span><h3>LQR and optimal control</h3><p>Riccati-based state feedback, compared with pole placement</p></div>
+      <div class="step"><span class="tagn">Up next</span><h3>Robust MPC</h3><p>Keeping constraints under disturbance, the limit my nominal MPC hit</p></div>
+      <div class="step"><span class="tagn">Up next</span><h3>Observers in the loop</h3><p>Feeding a state estimator into the controller instead of measured states</p></div>
+      <div class="step"><span class="tagn">Up next</span><h3>Closed-loop control on my robot car</h3><p>Encoders, an IMU and PID speed control on the robot car I built in 2016</p></div>
+      <div class="step"><span class="tagn">Up next</span><h3>Real-hardware timing</h3><p>Measured loop jitter on a microcontroller, not in simulation</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap">
+    <div class="cta">
+      <div><h2>Let's talk controls</h2><p><a class="mail" href="mailto:asifuzzamanucchwas@gmail.com" target="_blank" rel="noopener">asifuzzamanucchwas@gmail.com</a></p></div>
+      <div class="links">
+        <a class="btn primary" href="mailto:asifuzzamanucchwas@gmail.com" target="_blank" rel="noopener">Email me</a>
+        <a class="btn" href="https://www.linkedin.com/in/masifuzzaman" target="_blank" rel="noopener">LinkedIn</a>
+        <a class="btn" href="https://github.com/Asif-Ucchwas" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </div>
+  </div>
+</section>
+<footer><div class="wrap">© 2026 Md Asifuzzaman · <span class="crosslink">Also see my <a href="https://asif-ucchwas.github.io/" target="_blank" rel="noopener">Motion Planning Engineer page</a></span></div></footer>
+<script>
+/* ---------- DC servo plant and controllers (port of controlloop-rt/stage5_benchmarking/run_benchmark.py) ---------- */
+const J = 0.01, Bf = 0.1, Km = 0.01, Ra = 1.0;
+const A21 = -(Bf + Km*Km/Ra)/J, B21 = Km/(Ra*J);
+const KP = 144.0, KD = 6.79;
+const AMP = 0.75, FREQ = 0.5, DT = 0.001, T_END = 5.0, STEPS = Math.round(T_END/DT);
+const DIST_START = 1.0, DIST_END = 1.3, DIST_MAG = -80.0;
+const NOISE_TH = 0.01;
+function rng(seed){ let s = seed >>> 0; return () => { s = (s + 0x6D2B79F5) >>> 0; let t = s; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+function gauss(r){ let u = 0, v = 0; while(u === 0) u = r(); v = r(); return Math.sqrt(-2*Math.log(u)) * Math.cos(2*Math.PI*v); }
+function simulate(ff, dist, noise, seed){
+  const r = rng(seed), w = 2*Math.PI*FREQ;
+  let th = 0, om = 0, prev = 0, e2 = 0, emax = 0, uPrev = null, dsum = 0, dsum2 = 0, n = 0;
+  const theta = new Float32Array(STEPS), ref = new Float32Array(STEPS);
+  for(let i = 0; i < STEPS; i++){
+    const t = i*DT;
+    const tr = AMP*Math.sin(w*t), trd = AMP*w*Math.cos(w*t), trdd = -AMP*w*w*Math.sin(w*t);
+    const meas = noise ? th + NOISE_TH*gauss(r) : th;
+    const err = tr - meas, der = -(meas - prev)/DT;
+    let u = KP*err + KD*der;
+    if(ff) u += (Ra/Km)*(J*trdd + (Bf + Km*Km/Ra)*trd);
+    prev = meas;
+    if(uPrev !== null){ const d = u - uPrev; dsum += d; dsum2 += d*d; n++; }
+    uPrev = u;
+    const dt = (dist && t >= DIST_START && t < DIST_END) ? DIST_MAG : 0;
+    const acc = A21*om + B21*u + dt;
+    th += om*DT; om += acc*DT;
+    theta[i] = th; ref[i] = tr;
+    const e = tr - th; e2 += e*e; if(Math.abs(e) > emax) emax = Math.abs(e);
+  }
+  const mean = dsum/n;
+  return {theta, ref, rms: Math.sqrt(e2/STEPS), max: emax, chatter: Math.sqrt(Math.max(0, dsum2/n - mean*mean))};
+}
+
+/* ---------- Demo UI ---------- */
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const $ = id => document.getElementById(id);
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const cv = $("plot"), ctx = cv.getContext("2d");
+let runs = null, progress = 1, animId = 0;
+const PAD = {l:84, r:30, t:18, b:48}, YMAX = 1.1;
+const X = t => PAD.l + (t/T_END)*(cv.width - PAD.l - PAD.r);
+const Y = v => PAD.t + (1 - (v + YMAX)/(2*YMAX))*(cv.height - PAD.t - PAD.b);
+function drawAxes(dist){
+  ctx.clearRect(0, 0, cv.width, cv.height);
+  ctx.font = "22px " + css("--sans");
+  if(dist){
+    ctx.fillStyle = css("--bad-soft");
+    ctx.fillRect(X(DIST_START), PAD.t, X(DIST_END) - X(DIST_START), cv.height - PAD.t - PAD.b);
+    ctx.fillStyle = css("--bad"); ctx.textAlign = "left";
+    ctx.fillText("disturbance", X(DIST_END) + 8, PAD.t + 24);
+  }
+  ctx.strokeStyle = css("--line");
+  ctx.lineWidth = 1; ctx.fillStyle = css("--soft");
+  ctx.textAlign = "right"; ctx.textBaseline = "middle";
+  for(const v of [-1, -0.5, 0, 0.5, 1]){
+    ctx.beginPath(); ctx.moveTo(PAD.l, Y(v)); ctx.lineTo(cv.width - PAD.r, Y(v)); ctx.stroke();
+    ctx.fillText(v.toFixed(1), PAD.l - 10, Y(v));
+  }
+  ctx.textAlign = "center"; ctx.textBaseline = "top";
+  for(let s = 0; s <= 5; s++) ctx.fillText(s + " s", X(s), cv.height - PAD.b + 12);
+  ctx.save(); ctx.translate(22, (PAD.t + cv.height - PAD.b)/2); ctx.rotate(-Math.PI/2);
+  ctx.textBaseline = "middle"; ctx.fillText("angle (rad)", 0, 0); ctx.restore();
+}
+function line(arr, upto, color, width, dash){
+  ctx.beginPath(); ctx.strokeStyle = color; ctx.lineWidth = width; ctx.setLineDash(dash || []);
+  const step = 5;
+  for(let i = 0; i <= upto; i += step){ const x = X(i*DT), y = Y(arr[i]); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
+  ctx.stroke(); ctx.setLineDash([]);
+}
+function render(){
+  const dist = $("dist").checked;
+  drawAxes(dist);
+  if(!runs) return;
+  const upto = Math.min(STEPS - 1, Math.floor(progress*(STEPS - 1)));
+  line(runs.pd.ref, STEPS - 1, css("--soft"), 2, [10, 8]);
+  line(runs.pd.theta, upto, css("--c-astar-solid"), 3.5);
+  line(runs.ff.theta, upto, css("--lane"), 3.5);
+}
+function setStats(show){
+  const f = (v, d) => show ? v.toFixed(d) : "–";
+  $("rP").textContent = f(runs.pd.rms, 4); $("mP").textContent = f(runs.pd.max, 4); $("cP").textContent = f(runs.pd.chatter, 2);
+  $("rF").textContent = f(runs.ff.rms, 4); $("mF").textContent = f(runs.ff.max, 4); $("cF").textContent = f(runs.ff.chatter, 2);
+}
+function compute(){
+  const dist = $("dist").checked, noise = $("noise").checked, seed = noise ? (Date.now() % 100000) : 1;
+  runs = {pd: simulate(false, dist, noise, seed), ff: simulate(true, dist, noise, seed + 7)};
+}
+function run(){
+  cancelAnimationFrame(animId);
+  compute(); setStats(false);
+  if(reduce){ progress = 1; render(); setStats(true); return; }
+  progress = 0; const t0 = performance.now(), dur = 2600;
+  $("runCtl").disabled = true;
+  const tick = now => {
+    progress = Math.min(1, (now - t0)/dur); render();
+    if(progress < 1) animId = requestAnimationFrame(tick);
+    else { setStats(true); $("runCtl").disabled = false; }
+  };
+  animId = requestAnimationFrame(tick);
+}
+$("runCtl").addEventListener("click", run);
+$("dist").addEventListener("change", run);
+$("noise").addEventListener("change", run);
+function fit(){ const narrow = cv.clientWidth < 620; const w = narrow ? 620 : 1040, h = narrow ? 460 : 440; if(cv.width !== w){ cv.width = w; cv.height = h; render(); } }
+addEventListener("resize", fit);
+compute(); progress = 1; fit(); render(); setStats(true);
+document.fonts?.ready.then(()=>{ if(progress >= 1) render(); });
+matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", render);
+
+/* ---------- Count-up results ---------- */
+function animate(el){
+  const target = parseFloat(el.dataset.count), dec = parseInt(el.dataset.dec || "0");
+  if(reduce){ el.textContent = target.toFixed(dec); return; }
+  const t0 = performance.now(), dur = 1200;
+  const tick = now => { const k = Math.min(1,(now-t0)/dur), e = 1-Math.pow(1-k,3); el.textContent = (target*e).toFixed(dec); if(k<1) requestAnimationFrame(tick); };
+  requestAnimationFrame(tick);
+}
+const io = "IntersectionObserver" in window ? new IntersectionObserver(entries=>{
+  entries.forEach(en=>{ if(!en.isIntersecting) return;
+    en.target.querySelectorAll("[data-count]").forEach(animate);
+    en.target.querySelectorAll("[data-bar]").forEach(b=>{ b.style.width = b.dataset.bar + "%"; });
+    io.unobserve(en.target); });
+},{threshold:.3}) : null;
+document.querySelectorAll(".res").forEach(r=>{
+  r.querySelectorAll("[data-bar]").forEach(b=>{ b.style.transition = reduce ? "none" : "width 1.2s cubic-bezier(.2,.8,.2,1)"; });
+  if(io) io.observe(r); else { r.querySelectorAll("[data-count]").forEach(animate); r.querySelectorAll("[data-bar]").forEach(b=>b.style.width=b.dataset.bar+"%"); }
+});
+</script>
+</body></html>
