@@ -1,5 +1,10 @@
-# Motion planning showcase
+# Md Asifuzzaman · Role-based portfolio
 
-Live page: https://asif-ucchwas.github.io/
+One page per engineering role, each backed by finished projects, measured results and a live in-browser demo.
 
-A live, in-browser comparison of standard RRT* and an A*-guided corridor RRT*, plus measured results from my ROS2 motion planning work.
+| Role | Live page | Live demo |
+|---|---|---|
+| Motion Planning Engineer | https://asif-ucchwas.github.io/ | Four planners, including my A*-guided corridor RRT*, racing on the same map |
+| Controls Engineer | https://asif-ucchwas.github.io/controls/ | My DC servo with feedback-only and feedforward control, with a disturbance toggle |
+
+Each page also lists the project I'm building now and the gaps I'm closing next.
