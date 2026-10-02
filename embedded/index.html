@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Why You Consider Me As An Embedded Systems Engineer (Vehicle Networks) · Md Asifuzzaman</title>
+<title>Why You Consider Me As An Embedded Systems Engineer – Vehicle Networks · Md Asifuzzaman</title>
 <meta name="description" content="Embedded systems engineer for vehicle networks: J1939 over SocketCAN, Zephyr RTOS bridged to CAN, 360-trial bus benchmarks, and a live CAN arbitration demo.">
-<meta property="og:title" content="Why You Consider Me As An Embedded Systems Engineer (Vehicle Networks) · Md Asifuzzaman">
+<meta property="og:title" content="Why You Consider Me As An Embedded Systems Engineer – Vehicle Networks · Md Asifuzzaman">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://asif-ucchwas.github.io/embedded/">
 <meta property="og:image" content="https://asif-ucchwas.github.io/embedded/preview.jpg?v=1">
@@ -337,7 +337,6 @@ footer{padding:26px 0 40px;color:var(--soft);font-size:.84rem}
 .canid b{color:var(--lane)}
 /* longer title than the other role pages: scale the desktop headline to fit its column */
 @media (min-width:861px){.hero h1{font-size:min(3.3rem, calc((55vw - max(22px, (100vw - 1120px) / 2 + 22px) - 28px) / 14.4))}}
-@media (max-width:620px){.hero h1 .paren{font-size:.6em}}
 .res .row{grid-template-columns:96px 1fr 64px}
 @media (max-width:480px){
   .arb{border-spacing:2px;font-size:.7rem}
@@ -353,6 +352,31 @@ footer{padding:26px 0 40px;color:var(--soft);font-size:.84rem}
   linear-gradient(0deg,var(--bg) 0%,transparent 22%),
   linear-gradient(180deg,color-mix(in srgb,var(--bg) 40%,transparent) 0%,transparent 16%)}}
 @media (max-width:860px){.hero-photo img{object-position:50% 38%}}
+/* title: "– Vehicle Networks" line */
+.hero h1 .net{font-family:var(--cond);font-weight:700;font-size:.56em;letter-spacing:.01em;color:var(--ink);margin:.12em 0 .05em;white-space:nowrap}
+.hero h1 .net i{font-style:normal;color:var(--lane)}
+@media (max-width:620px){.hero h1 .net{font-size:.62em}}
+/* hero CAN bus */
+.bus{margin:10px 0 16px;max-width:640px}
+.bus svg{display:block;width:100%;height:auto;overflow:visible}
+.bus .bus-h{stroke:var(--lane);stroke-width:2.5}
+.bus .bus-l{stroke:var(--soft);stroke-width:2.5;opacity:.7}
+.bus .term{fill:var(--soft);opacity:.7}
+.bus .ecu{cursor:pointer;outline:none}
+.bus .ecu .dot{fill:var(--panel);stroke:var(--lane);stroke-width:2.5;transition:fill .2s,stroke .2s,r .2s}
+.bus .ecu text{font-family:var(--sans);font-size:10px;font-weight:600;letter-spacing:.08em;fill:var(--soft);text-anchor:middle}
+.bus .ecu:hover .dot,.bus .ecu:focus-visible .dot{fill:var(--lane-soft);r:12}
+.bus .ecu:focus-visible text{fill:var(--ink)}
+.bus .ecu.tx .dot{fill:var(--lane)}
+.bus .ecu.rx .dot{fill:var(--good);stroke:var(--good)}
+.bus .pkt rect{fill:var(--lane)}
+.bus .pkt text{font-family:var(--mono);font-size:10px;font-weight:600;fill:#1a1300;text-anchor:middle}
+.bus-hint{margin:2px 0 0;font-size:.82rem;color:var(--soft);min-height:1.3em}
+/* the top section stays dark in both themes so the photo always sits on a matching background */
+.hero{--bg:#0C1117;--panel:#131B24;--ink:#E7EDF1;--soft:#98A6B3;--line:#223040;--lane:#F2B63C;--lane-soft:#33290F;--good:#4FC2AF;--good-soft:#12302B;background:var(--bg);color:var(--ink)}
+.bus .ecu .hit{fill:transparent;stroke:none}
+@media (max-width:620px){.bus .ecu text{font-size:19px;letter-spacing:.04em}.bus .ecu .dot{stroke-width:4}.bus svg{margin-bottom:6px}}
+.pillars-sec{padding-top:28px}
 
 </style>
 </head>
@@ -361,13 +385,19 @@ footer{padding:26px 0 40px;color:var(--soft);font-size:.84rem}
   <div class="hero-photo"><img src="photo.jpg" alt="Md Asifuzzaman at a space center, in front of a wall of astronaut crew portraits" width="1100" height="1467"></div>
   <div class="wrap hero-inner">
     <div class="hero-text">
-      <h1><span class="ln kicker">Why You Consider Me As</span><span class="ln a">An</span><span class="ln hl">Embedded Systems Engineer</span><span class="ln paren">(Vehicle Networks)</span></h1>
-      <svg class="traj" viewBox="0 0 640 46" aria-hidden="true">
-        <path id="trajPath" d="M8 34 H52.3 V12 H96.6 H140.9 V34 H185.1 V12 H229.4 V34 H273.7 H318.0 V12 H362.3 V34 H406.6 V12 H450.9 H495.1 V34 H539.4 V12 H583.7 H628.0" />
-        <circle class="traj-start" cx="8" cy="34" r="6"/>
-        <circle class="traj-goal" cx="628" cy="12" r="6"/>
-        <circle class="traj-car" r="5"><animateMotion dur="2.8s" begin="0.4s" fill="freeze" calcMode="spline" keyTimes="0;1" keySplines="0.3 0 0.2 1"><mpath href="#trajPath"/></animateMotion></circle>
-      </svg>
+      <h1><span class="ln kicker">Why You Consider Me As</span><span class="ln a">An</span><span class="ln hl">Embedded Systems Engineer</span><span class="ln net"><i aria-hidden="true">–</i> Vehicle Networks</span></h1>
+      <div class="bus">
+        <svg viewBox="0 0 640 62" role="group" aria-label="A small CAN bus with four ECUs. Activate an ECU to send a frame.">
+          <rect class="term" x="2" y="20" width="6" height="16" rx="1"/><rect class="term" x="632" y="20" width="6" height="16" rx="1"/>
+          <line class="bus-h" x1="8" y1="24" x2="632" y2="24"/><line class="bus-l" x1="8" y1="32" x2="632" y2="32"/>
+          <g id="pkts"></g>
+          <g class="ecu" data-x="80" data-id="0x0C8" data-name="Engine ECU" tabindex="0" role="button" aria-label="Send a frame from the Engine ECU"><circle class="hit" cx="80" cy="30" r="26"/><circle class="dot" cx="80" cy="28" r="10"/><text x="80" y="56">ENGINE</text></g>
+          <g class="ecu" data-x="250" data-id="0x064" data-name="Brake ECU" tabindex="0" role="button" aria-label="Send a frame from the Brake ECU"><circle class="hit" cx="250" cy="30" r="26"/><circle class="dot" cx="250" cy="28" r="10"/><text x="250" y="56">BRAKE</text></g>
+          <g class="ecu" data-x="420" data-id="0x066" data-name="Steering ECU" tabindex="0" role="button" aria-label="Send a frame from the Steering ECU"><circle class="hit" cx="420" cy="30" r="26"/><circle class="dot" cx="420" cy="28" r="10"/><text x="420" y="56">STEERING</text></g>
+          <g class="ecu" data-x="590" data-id="0x3E8" data-name="Dashboard ECU" tabindex="0" role="button" aria-label="Send a frame from the Dashboard ECU"><circle class="hit" cx="590" cy="30" r="26"/><circle class="dot" cx="590" cy="28" r="10"/><text x="590" y="56">DASH</text></g>
+        </svg>
+        <p class="bus-hint" id="busHint">Tap an ECU to put a frame on the bus</p>
+      </div>
       <p class="name">Md Asifuzzaman</p>
       <div class="pass" aria-label="Work authorization">
         <div class="pass-seg"><b>F-1</b><span class="pass-lbl">OPT (STEM)</span></div>
@@ -652,6 +682,38 @@ function setSig(){
 $("sig").addEventListener("change", setSig);
 $("val").addEventListener("input", renderJ);
 setSig();
+
+/* ---------- Hero CAN bus: tap an ECU to broadcast a frame ---------- */
+(() => {
+  const NS = "http://www.w3.org/2000/svg", layer = document.getElementById("pkts"), ecus = [...document.querySelectorAll(".bus .ecu")];
+  function send(g){
+    const x0 = +g.dataset.x, id = g.dataset.id;
+    document.getElementById("busHint").textContent = g.dataset.name + " sent " + id + " to every node on the bus";
+    g.classList.add("tx"); setTimeout(() => g.classList.remove("tx"), 900);
+    const others = ecus.filter(e => e !== g);
+    if(reduce){ others.forEach(e => { e.classList.add("rx"); setTimeout(() => e.classList.remove("rx"), 900); }); return; }
+    [-1, 1].forEach(dir => {
+      const p = document.createElementNS(NS, "g"); p.setAttribute("class", "pkt");
+      p.innerHTML = `<rect x="-24" y="-8" width="48" height="16" rx="4"/><text x="0" y="4">${id}</text>`;
+      layer.appendChild(p);
+      const end = dir < 0 ? 8 : 632, dist = Math.abs(end - x0), t0 = performance.now(), dur = Math.max(250, dist * 2.2);
+      const hit = new Set();
+      const tick = now => {
+        const k = Math.min(1, (now - t0) / dur), x = x0 + dir * dist * k;
+        p.setAttribute("transform", `translate(${x},28)`);
+        p.style.opacity = k > .85 ? (1 - k) / .15 : 1;
+        others.forEach(e => { const ex = +e.dataset.x; if(!hit.has(e) && (dir < 0 ? x <= ex : x >= ex)){ hit.add(e); e.classList.add("rx"); setTimeout(() => e.classList.remove("rx"), 700); } });
+        if(k < 1) requestAnimationFrame(tick); else p.remove();
+      };
+      requestAnimationFrame(tick);
+    });
+  }
+  ecus.forEach(g => {
+    g.addEventListener("click", () => send(g));
+    g.addEventListener("keydown", e => { if(e.key === "Enter" || e.key === " "){ e.preventDefault(); send(g); } });
+  });
+  setTimeout(() => send(ecus[0]), reduce ? 0 : 900);
+})();
 
 /* ---------- Count-up results ---------- */
 function animate(el){
