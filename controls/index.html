@@ -314,6 +314,11 @@ footer{padding:26px 0 40px;color:var(--soft);font-size:.84rem}
   linear-gradient(90deg,var(--bg) 0%,color-mix(in srgb,var(--bg) 80%,transparent) 5%,color-mix(in srgb,var(--bg) 40%,transparent) 11%,color-mix(in srgb,var(--bg) 12%,transparent) 17%,transparent 24%),
   linear-gradient(0deg,var(--bg) 0%,transparent 22%),
   linear-gradient(180deg,color-mix(in srgb,var(--bg) 40%,transparent) 0%,transparent 16%)}}
+#writing{padding:24px 0 8px}
+.sub-card{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:22px 24px}
+.sub-card .sub{margin:0}
+.sub-frame{display:block;width:100%;height:320px;border:0;border-radius:12px;background:#fff;color-scheme:light}
+@media (max-width:760px){.sub-card{grid-template-columns:1fr;padding:18px}}
 
 </style>
 </head>
@@ -485,6 +490,15 @@ footer{padding:26px 0 40px;color:var(--soft);font-size:.84rem}
       <div class="step"><span class="tagn">Up next</span><h3>Observers in the loop</h3><p class="locked">Not open to the public yet</p></div>
       <div class="step"><span class="tagn">Up next</span><h3>Closed-loop control on my robot car</h3><p class="locked">Not open to the public yet</p></div>
       <div class="step"><span class="tagn">Up next</span><h3>Real-hardware timing</h3><p class="locked">Not open to the public yet</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="writing">
+  <div class="wrap">
+    <div class="sub-card">
+      <div><p class="eyebrow">Writing</p><h2>Subscribe to my writing</h2><p class="sub">Get new posts from my Substack straight to your inbox.</p></div>
+      <iframe class="sub-frame" src="https://mdasifuzzaman.substack.com/embed" title="Subscribe to Md Asifuzzaman on Substack" loading="lazy" scrolling="no"></iframe>
     </div>
   </div>
 </section>
