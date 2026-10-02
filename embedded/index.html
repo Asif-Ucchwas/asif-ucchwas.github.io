@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Why You Consider Me As An Embedded Systems Engineer (Vehicle Networks) · Md Asifuzzaman</title>
+<meta name="description" content="Embedded systems engineer for vehicle networks: J1939 over SocketCAN, Zephyr RTOS bridged to CAN, 360-trial bus benchmarks, and a live CAN arbitration demo.">
+<meta property="og:title" content="Why You Consider Me As An Embedded Systems Engineer (Vehicle Networks) · Md Asifuzzaman">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://asif-ucchwas.github.io/embedded/">
+<meta property="og:image" content="https://asif-ucchwas.github.io/embedded/preview.jpg?v=1">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://asif-ucchwas.github.io/embedded/preview.jpg?v=1">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔌</text></svg>">
+<meta property="og:description" content="Embedded systems engineer for vehicle networks: J1939 over SocketCAN, Zephyr RTOS on CAN, 360-trial bus benchmarks, and a live demo to try.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Playfair+Display:wght@700;900&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F3F5F2; --panel:#FFFFFF; --ink:#141C25; --soft:#586472; --line:#DCE2DD;
+  --lane:#D9950F; --lane-soft:#FBEFD2; --good:#1F7A6E; --good-soft:#DDF0EC; --bad:#C2334D; --bad-soft:#F8E3E7;
+  --obs:#1D2733; --tree-a:rgba(194,51,77,.35); --tree-b:rgba(31,122,110,.38); --corr:rgba(217,149,15,.14); --grid:rgba(20,28,37,.06);
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --cond:"IBM Plex Sans Condensed","Arial Narrow",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Consolas,monospace;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+  --bg:#0C1117; --panel:#131B24; --ink:#E7EDF1; --soft:#98A6B3; --line:#223040;
+  --lane:#F2B63C; --lane-soft:#33290F; --good:#4FC2AF; --good-soft:#12302B; --bad:#EE6A80; --bad-soft:#3A1A22;
+  --obs:#2C3B4C; --tree-a:rgba(238,106,128,.38); --tree-b:rgba(79,194,175,.42); --corr:rgba(242,182,60,.12); --grid:rgba(231,237,241,.05);
+}}
+:root[data-theme="dark"]{
+  --bg:#0C1117; --panel:#131B24; --ink:#E7EDF1; --soft:#98A6B3; --line:#223040;
+  --lane:#F2B63C; --lane-soft:#33290F; --good:#4FC2AF; --good-soft:#12302B; --bad:#EE6A80; --bad-soft:#3A1A22;
+  --obs:#2C3B4C; --tree-a:rgba(238,106,128,.38); --tree-b:rgba(79,194,175,.42); --corr:rgba(242,182,60,.12); --grid:rgba(231,237,241,.05);
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16.5px;line-height:1.6}
+a{color:inherit}
+button,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--lane);outline-offset:3px;border-radius:4px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 22px}
+section{padding:64px 0}
+.eyebrow{font-size:.85rem;font-weight:600;color:var(--lane);margin:0 0 8px}
+h2{font-family:var(--cond);font-weight:700;font-size:clamp(1.9rem,4vw,2.7rem);line-height:1.05;margin:0 0 12px}
+.sub{color:var(--soft);max-width:62ch;margin:0 0 28px}
+
+/* hero */
+.hero{padding:56px 0 36px}
+.hero-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:36px;align-items:end}
+@media (max-width:860px){.hero-grid{grid-template-columns:1fr}}
+.hero h1{font-family:var(--cond);font-weight:700;font-size:clamp(2.4rem,5.4vw,4rem);line-height:1;margin:0 0 16px;letter-spacing:-.01em}
+.hero h1 span{color:inherit}
+.hero .name{font-family:var(--cond);font-weight:600;font-size:1.5rem;margin:0 0 14px}
+.hero p.lede{font-size:1.12rem;max-width:56ch;margin:0 0 20px}
+.auth{display:inline-block;font-size:.88rem;padding:7px 13px;border:1px solid var(--line);border-radius:14px;color:var(--soft);margin-bottom:22px;background:var(--panel)}
+.links{display:flex;flex-wrap:wrap;gap:10px}
+.btn{display:inline-flex;align-items:center;gap:8px;text-decoration:none;border-radius:10px;padding:10px 16px;font-weight:600;font-size:.95rem;border:1px solid var(--line);background:var(--panel)}
+.btn.primary{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btn:hover{border-color:var(--soft)}
+.facts{display:grid;gap:10px}
+.fact{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 16px;display:flex;justify-content:space-between;gap:14px;align-items:baseline}
+.fact span{color:var(--soft);font-size:.9rem}
+.fact b{font-family:var(--cond);font-size:1.15rem;text-align:right}
+
+/* demo */
+.demo{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px}
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;padding:3px}
+.seg button{border:0;background:transparent;padding:7px 13px;border-radius:7px;cursor:pointer;font-weight:500;color:var(--soft)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.cbtn{border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:8px 14px;cursor:pointer;font-weight:600}
+.cbtn.go{background:var(--lane);border-color:var(--lane);color:#1a1300}
+.cbtn:disabled{opacity:.5;cursor:default}
+.boards{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:820px){.boards{grid-template-columns:1fr}}
+.board h3{margin:0 0 6px;font-size:1rem;display:flex;align-items:center;gap:8px}
+.board h3 i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.board canvas{width:100%;height:auto;display:block;border-radius:12px;border:1px solid var(--line);background:var(--bg)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+.stat{border:1px solid var(--line);border-radius:10px;padding:7px 10px}
+.stat span{display:block;font-size:.75rem;color:var(--soft)}
+.stat b{font-family:var(--cond);font-size:1.2rem;font-variant-numeric:tabular-nums}
+.status-ok{color:var(--good)} .status-no{color:var(--bad)}
+.trials{margin-top:16px;border-top:1px dashed var(--line);padding-top:14px;display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:center}
+@media (max-width:640px){.trials{grid-template-columns:1fr}}
+.tbars{display:grid;gap:8px}
+.tbar{display:grid;grid-template-columns:150px 1fr 56px;gap:10px;align-items:center;font-size:.88rem}
+@media (max-width:460px){.tbar{grid-template-columns:100px 1fr 48px}}
+.track{height:14px;background:var(--bg);border:1px solid var(--line);border-radius:99px;overflow:hidden}
+.track i{display:block;height:100%;width:0;transition:width .4s}
+.tbar b{font-variant-numeric:tabular-nums;text-align:right}
+.note{font-size:.84rem;color:var(--soft);margin:12px 0 0}
+
+/* results */
+.results{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media (max-width:860px){.results{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:500px){.results{grid-template-columns:1fr}}
+.res{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px}
+.res .big{font-family:var(--cond);font-weight:700;font-size:2.6rem;line-height:1;font-variant-numeric:tabular-nums}
+.res .lbl{color:var(--soft);font-size:.92rem;margin-top:6px}
+.res .cmp{display:grid;gap:6px;margin-top:12px}
+.res .row{display:grid;grid-template-columns:78px 1fr 44px;gap:8px;align-items:center;font-size:.82rem}
+.res .row .track{height:10px}
+.res.wide{grid-column:span 2}
+@media (max-width:500px){.res.wide{grid-column:auto}}
+
+/* fit */
+.fit{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+@media (max-width:760px){.fit{grid-template-columns:1fr}}
+.fitc{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px 20px;border-top:4px solid var(--lane)}
+.fitc h3{margin:0 0 4px;font-size:1.08rem}
+.fitc .req{font-size:.85rem;color:var(--soft);margin:0 0 10px}
+.fitc ul{margin:0;padding-left:18px}
+.fitc li{margin-bottom:5px}
+
+/* projects */
+.projects{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+@media (max-width:760px){.projects{grid-template-columns:1fr}}
+.proj{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px 20px;display:flex;flex-direction:column}
+.proj.lead{grid-column:1/-1;border-color:var(--lane)}
+.proj h3{margin:0 0 6px;font-family:var(--cond);font-size:1.4rem;line-height:1.15}
+.proj p{margin:0 0 10px;color:var(--soft)}
+.proj ul{margin:0 0 12px;padding-left:18px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto}
+.chip{font-family:var(--mono);font-size:.76rem;padding:3px 9px;border-radius:99px;background:var(--bg);border:1px solid var(--line)}
+.metric{display:inline-block;font-weight:600;color:var(--good)}
+
+/* stack */
+.stack{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media (max-width:860px){.stack{grid-template-columns:1fr}}
+.stk{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px 18px}
+.stk h3{margin:0 0 10px;font-size:1rem}
+
+/* timeline / pubs */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+@media (max-width:860px){.two{grid-template-columns:1fr}}
+.tl{list-style:none;margin:0;padding:0;border-left:2px solid var(--line)}
+.tl li{position:relative;padding:0 0 18px 18px}
+.tl li::before{content:"";position:absolute;left:-7px;top:6px;width:12px;height:12px;border-radius:50%;background:var(--bg);border:2px solid var(--lane)}
+.tl b{display:block}
+.tl span{color:var(--soft);font-size:.9rem}
+.pub{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:10px}
+.pub b{display:block;line-height:1.35}
+.pub span{color:var(--soft);font-size:.9rem}
+.pub a{color:var(--good);font-weight:600;font-size:.9rem}
+
+/* contact */
+.cta{background:var(--ink);color:var(--bg);border-radius:20px;padding:34px 28px;display:flex;flex-wrap:wrap;gap:20px;align-items:center;justify-content:space-between}
+.cta h2{margin:0}
+.cta p{margin:6px 0 0;opacity:.8}
+.cta .btn{background:transparent;color:var(--bg);border-color:rgba(255,255,255,.35)}
+.cta .btn.primary{background:var(--lane);color:#1a1300;border-color:var(--lane)}
+footer{padding:26px 0 40px;color:var(--soft);font-size:.84rem}
+.pillar{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 16px;border-left:4px solid var(--lane)}
+.pillar b{display:block;font-family:var(--cond);font-size:1.25rem;line-height:1.1}
+.pillar span{color:var(--soft);font-size:.92rem}
+.res.full{grid-column:1/-1}
+.res.full .big{font-size:2rem}
+.proj a{color:var(--good);font-weight:600}
+.road{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media (max-width:860px){.road{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:520px){.road{grid-template-columns:1fr}}
+.step{background:var(--panel);border:1px dashed var(--soft);border-radius:16px;padding:16px 18px}
+.step h3{margin:6px 0 6px;font-size:1.05rem}
+.step p{margin:0;color:var(--soft);font-size:.93rem}
+.step p.locked{font-style:italic}
+.tagn{font-size:.75rem;font-weight:600;padding:2px 9px;border-radius:99px;background:var(--lane-soft);color:var(--lane)}
+.cta a.mail{color:var(--lane);font-weight:600;word-break:break-all}
+@media (min-width:861px){.hero-grid{grid-template-columns:1.15fr .85fr;align-items:center}}
+.portrait{position:relative;margin:0;border-radius:26px;overflow:hidden;border:1px solid var(--line);aspect-ratio:3/4;max-height:620px;box-shadow:0 24px 60px rgba(0,0,0,.28)}
+.portrait img{width:100%;height:100%;object-fit:cover;object-position:50% 20%;display:block}
+
+.portrait figcaption{position:absolute;left:18px;right:18px;bottom:16px;z-index:1;color:#fff;font-family:var(--cond);font-weight:600;font-size:1.15rem;line-height:1.25}
+.portrait figcaption span{display:block;font-family:var(--sans);font-weight:400;font-size:.88rem;opacity:.85}
+@media (max-width:860px){.portrait{width:100%;max-width:420px;max-height:520px;order:-1}}
+.pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:34px}
+@media (max-width:760px){.pillars{grid-template-columns:1fr}}
+.hero h1{font-family:"Playfair Display",Georgia,"Times New Roman",serif;font-weight:900;letter-spacing:-.005em;line-height:1.02}
+.hero .name{font-family:"Playfair Display",Georgia,"Times New Roman",serif;font-weight:700;font-size:1.7rem}
+.badges{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px}
+.badge{display:inline-flex;align-items:center;border-radius:10px;padding:10px 16px;font-weight:600;font-size:.95rem;border:1px solid var(--line);background:var(--panel)}
+.badge.key{border-color:var(--lane);color:var(--lane)}
+.cta-row{margin:0 0 10px}
+.social{display:flex;flex-wrap:nowrap;gap:10px}
+.social .btn{flex:0 0 auto}
+@media (max-width:420px){.social{gap:6px}.social .btn{padding:9px 12px;font-size:.9rem}.badge{padding:9px 13px;font-size:.9rem}}
+.hero h1 .ln{display:block;white-space:nowrap}
+.hero h1 .hl{color:var(--lane)}
+.hero h1{font-size:clamp(1.7rem,6.9vw,3rem);line-height:1.08}
+/* ---------- cinematic hero ---------- */
+.hero{position:relative;overflow:hidden;padding:0;min-height:min(94vh,800px);display:flex;flex-direction:column;justify-content:center}
+.hero-photo{position:absolute;top:0;right:0;bottom:0;width:52%;z-index:0}
+.hero-photo img{width:100%;height:100%;object-fit:cover;object-position:55% 22%;display:block}
+.hero-photo::after{content:"";position:absolute;inset:0;background:
+  linear-gradient(90deg,var(--bg) 0%,color-mix(in srgb,var(--bg) 70%,transparent) 14%,color-mix(in srgb,var(--bg) 15%,transparent) 34%,transparent 50%),
+  linear-gradient(0deg,var(--bg) 0%,transparent 26%),
+  linear-gradient(180deg,color-mix(in srgb,var(--bg) 55%,transparent) 0%,transparent 18%)}
+.hero-inner{position:relative;z-index:1;padding-top:70px;padding-bottom:20px;width:100%}
+.hero-text{max-width:620px}
+.hero h1{font-family:"Playfair Display",Georgia,"Times New Roman",serif;font-weight:900;font-size:clamp(1.8rem,6.6vw,3.5rem);line-height:1.04;margin:0 0 18px;text-shadow:0 2px 24px color-mix(in srgb,var(--bg) 70%,transparent)}
+.hero h1 .ln{display:block;white-space:nowrap}
+.hero h1 .a{font-style:italic;font-weight:700;color:var(--soft);font-size:.62em;line-height:1.2}
+.hero h1 .hl{color:var(--lane)}
+.hero .rule{width:84px;height:4px;background:var(--lane);border-radius:4px;margin:0 0 16px}
+.hero .pillars{position:relative;z-index:1;margin-top:26px;padding-bottom:40px;width:100%}
+.hero .pillar{background:color-mix(in srgb,var(--panel) 88%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+@media (max-width:860px){
+  .hero{min-height:0}
+  .hero-photo{position:relative;width:100%;height:62vh;max-height:560px}
+  .hero-photo img{object-position:50% 25%}
+  .hero-photo::after{background:linear-gradient(0deg,var(--bg) 0%,var(--bg) 6%,color-mix(in srgb,var(--bg) 55%,transparent) 20%,transparent 38%)}
+  .hero-inner{margin-top:-56px;padding-top:0}
+}
+
+:root{--c-astar:rgba(90,141,238,.28);--c-astar-solid:#5A8DEE;--c-rrt:rgba(155,120,230,.38);--c-rrt-solid:#9B78E6}
+.boards{grid-template-columns:1fr 1fr}
+.hero h1{font-size:clamp(2rem,7.2vw,3.5rem);margin:0 0 6px}
+.hero-text{max-width:720px}
+.hero h1 .kicker{font-family:var(--sans);font-weight:700;text-transform:uppercase;letter-spacing:.14em;font-size:.34em;color:var(--ink);margin-bottom:.35em;opacity:.9}
+.hero h1 .a{font-style:italic;font-weight:700;color:var(--lane);font-size:.72em;line-height:1;margin:-.05em 0 .02em}
+.hero h1 .hl{background:linear-gradient(92deg,var(--lane) 0%,#FF8A3D 60%,var(--lane) 100%);-webkit-background-clip:text;background-clip:text;color:transparent;padding-bottom:.06em}
+.traj{display:block;width:min(100%,640px);height:auto;margin:2px 0 18px;overflow:visible}
+.traj path{fill:none;stroke:var(--lane);stroke-width:3;stroke-linecap:round;stroke-dasharray:760;stroke-dashoffset:760;animation:trajDraw 2.4s cubic-bezier(.3,0,.2,1) .4s forwards}
+.traj .traj-start{fill:var(--good)} .traj .traj-goal{fill:none;stroke:var(--good);stroke-width:3} .traj .traj-car{fill:var(--ink)}
+@keyframes trajDraw{to{stroke-dashoffset:0}}
+.hero-text > *{animation:rise .8s cubic-bezier(.2,.7,.2,1) both}
+.hero-text > *:nth-child(2){animation-delay:.08s}.hero-text > *:nth-child(3){animation-delay:.16s}.hero-text > *:nth-child(4){animation-delay:.24s}.hero-text > *:nth-child(5){animation-delay:.32s}.hero-text > *:nth-child(6){animation-delay:.4s}.hero-text > *:nth-child(7){animation-delay:.48s}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.hero-text > *{animation:none}.traj path{animation:none;stroke-dashoffset:0}.traj .traj-car{display:none}}
+.hero h1{text-shadow:none}
+.hero h1 .hl{filter:drop-shadow(0 2px 18px rgba(242,182,60,.18))}
+
+.hero h1 .a{font-style:normal;font-weight:900;color:var(--ink);font-size:.62em;line-height:1.05;margin:.02em 0 .04em}
+.hero .name{text-transform:uppercase;letter-spacing:.08em;font-size:1.45rem}
+.pass{display:grid;grid-template-columns:auto 1.25fr 1.35fr;margin:4px 0 20px;background:var(--panel);border:1px solid var(--line);border-radius:16px;position:relative;max-width:640px;box-shadow:0 10px 30px rgba(0,0,0,.12)}
+.pass-seg{padding:12px 16px;display:flex;flex-direction:column;justify-content:center;position:relative;min-width:0}
+.pass-seg + .pass-seg{border-left:2px dashed var(--line)}
+.pass-seg + .pass-seg::before,.pass-seg + .pass-seg::after{content:"";position:absolute;left:-9px;width:16px;height:16px;border-radius:50%;background:var(--bg);border:1px solid var(--line)}
+.pass-seg + .pass-seg::before{top:-9px}.pass-seg + .pass-seg::after{bottom:-9px}
+.pass-lbl{font-size:.7rem;text-transform:uppercase;letter-spacing:.12em;color:var(--soft);font-weight:600}
+.pass b{font-size:1rem;line-height:1.3;display:flex;align-items:center;gap:6px}
+.pass-seg:first-child b{font-family:"Playfair Display",Georgia,serif;font-size:1.7rem;font-weight:900;color:var(--lane);line-height:1}
+.pass-note{font-size:.8rem;color:var(--soft);margin-top:2px}
+.plane{width:16px;height:16px;fill:var(--lane);transform:rotate(45deg);flex:none}
+@media (max-width:620px){
+  .pass{grid-template-columns:1fr}
+  .pass-seg + .pass-seg{border-left:0;border-top:2px dashed var(--line)}
+  .pass-seg + .pass-seg::before{top:-9px;left:-9px}.pass-seg + .pass-seg::after{top:-9px;bottom:auto;left:auto;right:-9px}
+}
+@media (max-width:620px){.hero h1{font-size:6.1vw}.hero h1 .kicker{font-size:.42em}.hero h1 .a{font-size:.7em}}
+
+.hero-photo{width:45%}
+.hero{min-height:min(88vh,760px)}
+.hero-inner{padding-bottom:60px}
+.pillars-sec{padding:8px 0 10px}
+.pillars-sec .pillars{margin-top:0}
+@media (min-width:861px){
+  .hero-text{max-width:calc(55vw - max(22px, (100vw - 1120px) / 2 + 22px) - 28px)}
+  .hero h1{font-size:min(3.5rem, calc((55vw - max(22px, (100vw - 1120px) / 2 + 22px) - 28px) / 12.8))}
+  .pass{max-width:100%}
+}
+@media (max-width:860px){.hero-photo{width:100%}}
+@media (max-width:820px){.boards{grid-template-columns:1fr}}
+
+/* ---------- controls page additions ---------- */
+.traj path{stroke-dasharray:900;stroke-dashoffset:900}
+.traj .setpoint{fill:none;stroke:var(--soft);stroke-width:1.5;stroke-dasharray:5 6;opacity:.55;animation:none}
+.toggle{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:10px;padding:7px 12px;cursor:pointer;font-weight:500;background:var(--bg);user-select:none}
+.toggle input{accent-color:var(--lane);width:16px;height:16px;margin:0}
+.plot{width:100%;height:auto;display:block;border-radius:12px;border:1px solid var(--line);background:var(--bg)}
+.legend{display:flex;flex-wrap:wrap;gap:14px;margin:10px 0 0;font-size:.88rem;color:var(--soft)}
+.legend i{display:inline-block;width:18px;height:3px;border-radius:2px;vertical-align:middle;margin-right:6px}
+.legend i.dash{background:repeating-linear-gradient(90deg,var(--soft) 0 5px,transparent 5px 9px)}
+.ctrl-stats{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+@media (max-width:640px){.ctrl-stats{grid-template-columns:1fr}}
+.ctrl-stats h3{margin:0 0 6px;font-size:1rem;display:flex;align-items:center;gap:8px}
+.ctrl-stats h3 i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.ongoing{background:var(--panel);border:1px solid var(--lane);border-radius:18px;padding:22px 22px 18px}
+.ongoing-head{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:6px}
+.ongoing h3{margin:0;font-family:var(--cond);font-size:1.6rem;line-height:1.1}
+.live-tag{display:inline-flex;align-items:center;gap:7px;font-size:.78rem;font-weight:600;padding:3px 10px;border-radius:99px;background:var(--lane-soft);color:var(--lane)}
+.live-tag::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--lane);animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.25}}
+@media (prefers-reduced-motion:reduce){.live-tag::before{animation:none}}
+.ongoing > p{color:var(--soft);margin:0 0 16px;max-width:70ch}
+.plan{list-style:none;margin:0 0 16px;padding:0;display:grid;grid-template-columns:repeat(2,1fr);gap:10px 18px;counter-reset:st}
+@media (max-width:760px){.plan{grid-template-columns:1fr}}
+.plan li{counter-increment:st;position:relative;padding:10px 12px 10px 46px;border:1px solid var(--line);border-radius:12px;background:var(--bg)}
+.plan li::before{content:counter(st);position:absolute;left:12px;top:10px;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-family:var(--cond);font-weight:700;font-size:.9rem;border:2px solid var(--lane);color:var(--lane)}
+.plan b{display:block;line-height:1.3}
+.plan span{color:var(--soft);font-size:.9rem}
+.ongoing .note{margin-top:4px}
+.crosslink{color:var(--soft)}
+.crosslink a{color:var(--good);font-weight:600}
+.traj path{stroke-linejoin:round;animation-duration:2.8s}
+.hero h1 .paren{font-family:var(--sans);font-weight:600;font-size:.4em;letter-spacing:.02em;color:var(--ink);margin:.2em 0 .1em;white-space:nowrap}
+/* embedded demo */
+.demo-grid{display:grid;grid-template-columns:1.25fr .75fr;gap:14px}
+@media (max-width:900px){.demo-grid{grid-template-columns:1fr}}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px;min-width:0}
+.panel h3{margin:0 0 4px;font-family:var(--cond);font-size:1.3rem}
+.panel > p{margin:0 0 12px;color:var(--soft);font-size:.92rem}
+.arb-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -4px;padding:0 4px}
+.arb{border-collapse:separate;border-spacing:3px;font-family:var(--mono);font-size:.82rem;min-width:100%}
+.arb th{font-weight:500;color:var(--soft);font-size:.7rem;padding:0 2px;text-align:center}
+.arb th.node{text-align:left;font-family:var(--sans);font-size:.8rem;color:var(--ink);font-weight:600;white-space:nowrap;padding-right:8px}
+.arb td{width:26px;height:28px;text-align:center;border-radius:6px;background:var(--bg);border:1px solid var(--line);color:var(--soft);transition:background .2s,color .2s}
+.arb td.on{color:var(--ink);font-weight:600}
+.arb td.dom{background:var(--lane-soft);border-color:var(--lane);color:var(--ink)}
+.arb td.lost{background:var(--bad-soft);border-color:var(--bad);color:var(--bad)}
+.arb td.off{opacity:.35}
+.arb tr.bus th.node{color:var(--lane)}
+.arb tr.win th.node{color:var(--good)}
+.arb td.hex{width:auto;background:transparent;border:0;color:var(--soft);padding-left:8px;font-size:.78rem}
+.order{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;min-height:34px;align-items:center;font-size:.88rem}
+.order .ok{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--good);color:var(--good);background:var(--good-soft);border-radius:99px;padding:4px 11px;font-weight:600}
+.dec-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:12px}
+.dec-row select{border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:7px 10px}
+.dec-row input[type=range]{flex:1;min-width:140px;accent-color:var(--lane)}
+.dec-val{font-family:var(--cond);font-size:1.6rem;font-weight:700;font-variant-numeric:tabular-nums}
+.bytes{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;margin:6px 0 4px}
+.bytes span{font-family:var(--mono);font-size:.85rem;text-align:center;padding:7px 0;border-radius:6px;border:1px solid var(--line);background:var(--bg);color:var(--soft)}
+.bytes span.sig{border-color:var(--lane);background:var(--lane-soft);color:var(--ink);font-weight:600}
+.bidx{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;font-size:.68rem;color:var(--soft);text-align:center}
+.fields{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.fields div{border:1px solid var(--line);border-radius:10px;padding:7px 10px;min-width:0}
+.fields span{display:block;font-size:.72rem;color:var(--soft)}
+.fields b{font-family:var(--mono);font-size:.95rem}
+.canid{font-family:var(--mono);font-size:1rem;margin:4px 0 0}
+.canid b{color:var(--lane)}
+/* longer title than the other role pages: scale the desktop headline to fit its column */
+@media (min-width:861px){.hero h1{font-size:min(3.3rem, calc((55vw - max(22px, (100vw - 1120px) / 2 + 22px) - 28px) / 14.4))}}
+@media (max-width:620px){.hero h1 .paren{font-size:.6em}}
+.res .row{grid-template-columns:96px 1fr 64px}
+@media (max-width:480px){
+  .arb{border-spacing:2px;font-size:.7rem}
+  .arb td{width:17px;height:24px;border-radius:4px}
+  .arb th{font-size:.58rem;padding:0}
+  .arb th.node{font-size:.72rem;padding-right:4px}
+  .arb td.hex,.arb th:last-child{display:none}
+}
+
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="hero-photo"><img src="../photo.jpg" alt="Md Asifuzzaman at his graduation" width="1100" height="1481"></div>
+  <div class="wrap hero-inner">
+    <div class="hero-text">
+      <h1><span class="ln kicker">Why You Consider Me As</span><span class="ln a">An</span><span class="ln hl">Embedded Systems Engineer</span><span class="ln paren">(Vehicle Networks)</span></h1>
+      <svg class="traj" viewBox="0 0 640 46" aria-hidden="true">
+        <path id="trajPath" d="M8 34 H52.3 V12 H96.6 H140.9 V34 H185.1 V12 H229.4 V34 H273.7 H318.0 V12 H362.3 V34 H406.6 V12 H450.9 H495.1 V34 H539.4 V12 H583.7 H628.0" />
+        <circle class="traj-start" cx="8" cy="34" r="6"/>
+        <circle class="traj-goal" cx="628" cy="12" r="6"/>
+        <circle class="traj-car" r="5"><animateMotion dur="2.8s" begin="0.4s" fill="freeze" calcMode="spline" keyTimes="0;1" keySplines="0.3 0 0.2 1"><mpath href="#trajPath"/></animateMotion></circle>
+      </svg>
+      <p class="name">Md Asifuzzaman</p>
+      <div class="pass" aria-label="Work authorization">
+        <div class="pass-seg"><b>F-1</b><span class="pass-lbl">OPT (STEM)</span></div>
+        <div class="pass-seg"><b>Authorized to work in the U.S.</b></div>
+        <div class="pass-seg"><span class="pass-lbl">Flew</span><b>13,000 miles <svg class="plane" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg></b><span class="pass-note">So Hawaii or Alaska doesn't matter</span></div>
+      </div>
+      <div class="cta-row"><a class="btn primary" href="#demo">Try the live CAN bus</a></div>
+      <div class="social">
+        <a class="btn" href="https://github.com/Asif-Ucchwas" target="_blank" rel="noopener">GitHub</a>
+        <a class="btn" href="https://www.linkedin.com/in/masifuzzaman" target="_blank" rel="noopener">LinkedIn</a>
+        <a class="btn" href="mailto:asifuzzamanucchwas@gmail.com" target="_blank" rel="noopener">Email</a>
+      </div>
+    </div>
+  </div>
+</header>
+<section class="pillars-sec">
+  <div class="wrap pillars">
+    <div class="pillar"><b>Talk</b><span>CAN, J1939 and DBC, the language vehicle ECUs speak</span></div><div class="pillar"><b>Schedule</b><span>Zephyr RTOS tasks, preemption, watchdogs and safe states</span></div><div class="pillar"><b>Prove</b><span>360-trial bus benchmarks, unit tests and CI, load tests</span></div>
+  </div>
+</section>
+
+<section id="demo">
+  <div class="wrap">
+    <p class="eyebrow">Live demo</p>
+    <h2>How a CAN bus decides who talks</h2>
+    <p class="sub">When several ECUs transmit at once, CAN settles it bit by bit: a 0 is dominant and overwrites a 1, so the lowest ID wins and nothing is corrupted. Next to it, the J1939 encoding from my CAN-Net project, live.</p>
+    <div class="demo-grid">
+      <div class="panel">
+        <h3>Arbitration on an 11-bit ID</h3>
+        <p>Three ECUs start sending at the same instant. Watch each one drop out the moment it sends a 1 while the bus reads 0.</p>
+        <div class="controls">
+          <button class="cbtn go" id="arbRun">Start arbitration</button>
+          <button class="cbtn" id="arbNew">New IDs</button>
+        </div>
+        <div class="arb-wrap"><table class="arb" id="arb" aria-label="Bit-by-bit CAN arbitration"></table></div>
+        <div class="order" id="order" aria-live="polite"></div>
+      </div>
+      <div class="panel">
+        <h3>J1939 frame encoder</h3>
+        <p>Pick a signal and drag the value. The bytes are packed the way my CAN-Net code packs them.</p>
+        <div class="dec-row">
+          <select id="sig" aria-label="J1939 signal">
+            <option value="eec1">Engine speed (SPN 190)</option>
+            <option value="ccvs">Vehicle speed (SPN 84)</option>
+          </select>
+        </div>
+        <div class="dec-row"><input type="range" id="val" aria-label="Signal value"><span class="dec-val" id="valOut">–</span></div>
+        <p class="canid">29-bit ID <b id="canId">–</b></p>
+        <div class="bytes" id="bytes"></div>
+        <div class="bidx"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span></div>
+        <div class="fields"><div><span>Priority</span><b id="fPri">–</b></div><div><span>PGN</span><b id="fPgn">–</b></div><div><span>Source</span><b id="fSa">–</b></div></div>
+      </div>
+    </div>
+    <p class="note">Arbitration happens in the electrical bit timing of real CAN hardware. My virtual bus (Linux vcan) can't reproduce it, which is exactly why my next project moves CAN-Net onto a real bus.</p>
+  </div>
+</section>
+
+<section id="results">
+  <div class="wrap">
+    <p class="eyebrow">Measured results</p>
+    <h2>Numbers from real experiments</h2>
+    <p class="sub">CAN, UDP and TCP under the same load, multi-ECU protocol stress tests, a real-time control loop and a telemetry pipeline, all measured.</p>
+    <div class="results">
+      <div class="res wide">
+        <div class="big"><span data-count="0">0</span>% drop at <span data-count="501.8" data-dec="1">0</span> msg/s</div>
+        <div class="lbl">CAN with 5 publishers at 100 Hz, 0.24 ms average latency. At 15 publishers the bus saturated: 0.89% drop and 5.17 ms average latency.</div>
+        <div class="cmp">
+          <div class="row"><span>5 × 100 Hz</span><div class="track"><i data-bar="5" style="background:var(--good)"></i></div><b>0.24 ms</b></div>
+          <div class="row"><span>15 × 100 Hz</span><div class="track"><i data-bar="100" style="background:var(--bad)"></i></div><b>5.17 ms</b></div>
+        </div>
+      </div>
+      <div class="res"><div class="big"><span data-count="360">0</span></div><div class="lbl">Benchmark trials comparing CAN, UDP and TCP with identical methodology</div></div>
+      <div class="res"><div class="big"><span data-count="3">0</span> ECUs, <span data-count="21">0</span> frames</div><div class="lbl">Interleaved J1939 multi-packet transfers, every message reassembled correctly</div></div>
+      <div class="res"><div class="big"><span data-count="35">0</span> tests</div><div class="lbl">Unit tests on the J1939 protocol math, run by CI on every push</div></div>
+      <div class="res"><div class="big"><span data-count="5195">0</span>/s</div><div class="lbl">CAN frames ingested with zero loss in my telemetry pipeline, ceiling found at about 9,700/s</div></div>
+      <div class="res full"><div class="big"><span data-count="0">0</span> of 2,999 deadlines missed</div><div class="lbl">1 kHz Zephyr RTOS control task in C under competing load, with a watchdog that catches a hung task in about 4 ms. Measured in simulation (native_sim).</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="wrap">
+    <p class="eyebrow">Projects</p>
+    <h2>What I've built</h2>
+    <div class="projects">
+      <article class="proj lead">
+        <h3>CAN-Net: embedded networking and a J1939 stack</h3>
+        <p>A from-scratch vehicle networking stack, from transport basics to an RTOS on the bus. <a href="https://github.com/Asif-Ucchwas/can-net" target="_blank" rel="noopener">View the repo</a></p>
+        <ul>
+          <li>SocketCAN with kernel-level ID filtering, DBC encoding and decoding with cantools, and documented bus contention between three nodes.</li>
+          <li>J1939 by hand: 29-bit IDs, real SPNs (engine and vehicle speed), BAM multi-packet transport and request/response diagnostics, stress-tested with <span class="metric">3 interleaving ECUs</span>.</li>
+          <li>Zephyr RTOS bridged to Linux CAN: its CAN task's frames matched <span class="metric">byte for byte</span> on the shared bus, with preemption verified.</li>
+          <li><span class="metric">360-trial benchmark</span>, 35 unit tests and GitHub Actions CI.</li>
+        </ul>
+        <div class="chips"><span class="chip">Python</span><span class="chip">C</span><span class="chip">SocketCAN</span><span class="chip">python-can</span><span class="chip">cantools</span><span class="chip">J1939</span><span class="chip">Zephyr</span><span class="chip">GitHub Actions</span></div>
+      </article>
+      <article class="proj">
+        <h3>ControlLoop-RT: real-time firmware</h3>
+        <p>The embedded side of my controls project. <a href="https://github.com/Asif-Ucchwas/controlloop-rt" target="_blank" rel="noopener">View the repo</a></p>
+        <ul><li>A <span class="metric">1 kHz Zephyr task</span> in C driven by a timer interrupt, with priority preemption verified.</li>
+        <li>Watchdog, dual-sensor voting (200 of 200 faulty samples caught) and an active-hold safe state.</li></ul>
+        <div class="chips"><span class="chip">C</span><span class="chip">Zephyr RTOS</span><span class="chip">Watchdog</span><span class="chip">ISO 26262 (documented)</span></div>
+      </article>
+      <article class="proj">
+        <h3>TelemOps: CAN telemetry pipeline</h3>
+        <p>From CAN frames to live dashboards. <a href="https://github.com/Asif-Ucchwas/telemops" target="_blank" rel="noopener">View the repo</a></p>
+        <ul><li>DBC-encoded signals over SocketCAN, decoded and batched into Postgres, shown in Grafana with alerts.</li>
+        <li><span class="metric">Zero loss up to 5,195 frames/s</span>; the ceiling traced to the ingestor's receive loop. Docker, Kubernetes and Terraform.</li></ul>
+        <div class="chips"><span class="chip">Python</span><span class="chip">SocketCAN</span><span class="chip">Postgres</span><span class="chip">Grafana</span><span class="chip">Kubernetes</span><span class="chip">Terraform</span></div>
+      </article>
+      <article class="proj">
+        <h3>IoT transmission-line fault detection</h3>
+        <p>Real hardware, published. <a href="http://dx.doi.org/10.29322/IJSRP.13.07.2023.p13921" target="_blank" rel="noopener">Read the paper</a></p>
+        <ul><li>ESP8266 firmware reading three phases through relay multiplexing on one ADC pin, classifying faults and reporting over Wi-Fi.</li>
+        <li><span class="metric">Published in IJSRP, July 2023</span>.</li></ul>
+        <div class="chips"><span class="chip">ESP8266</span><span class="chip">Arduino C++</span><span class="chip">ADC</span><span class="chip">Firebase</span></div>
+      </article>
+      <article class="proj">
+        <h3>Smartphone-controlled surveillance robot</h3>
+        <p>Where hardware started for me. <a href="https://github.com/Asif-Ucchwas/smartphone-controlled-surveillance-robot" target="_blank" rel="noopener">View the repo</a></p>
+        <ul><li>Arduino, an HC-05 Bluetooth link and a motor driver on a 4-wheel-drive chassis, driven from a phone.</li>
+        <li><span class="metric">3rd place</span>, national university project competition, Bangladesh, 2016.</li></ul>
+        <div class="chips"><span class="chip">Arduino</span><span class="chip">Bluetooth</span><span class="chip">Motor driver</span></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="stack">
+  <div class="wrap">
+    <p class="eyebrow">Stack</p>
+    <h2>Tools I build with</h2>
+    <div class="stack">
+      <div class="stk"><h3>Protocols</h3><div class="chips"><span class="chip">CAN</span><span class="chip">SocketCAN</span><span class="chip">J1939</span><span class="chip">DBC</span><span class="chip">TCP / UDP</span><span class="chip">Serial</span></div></div>
+      <div class="stk"><h3>Embedded and RTOS</h3><div class="chips"><span class="chip">C</span><span class="chip">Zephyr RTOS</span><span class="chip">QEMU Cortex-M3</span><span class="chip">ESP8266</span><span class="chip">Arduino</span></div></div>
+      <div class="stk"><h3>Tooling and testing</h3><div class="chips"><span class="chip">python-can</span><span class="chip">cantools</span><span class="chip">can-utils</span><span class="chip">Docker</span><span class="chip">pytest</span><span class="chip">GitHub Actions</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="ongoing">
+  <div class="wrap">
+    <p class="eyebrow">Ongoing</p>
+    <h2>What I'm building now</h2>
+    <p class="sub">Taking CAN-Net off the virtual bus and onto real hardware, where arbitration and timing are physical.</p>
+    <div class="ongoing">
+      <div class="ongoing-head"><h3>CAN-Net on real hardware</h3><span class="live-tag">In progress</span></div>
+      <p>Two microcontroller nodes on a real CAN bus, running my J1939 stack in C firmware, measured against my virtual-bus results.</p>
+      <ol class="plan">
+        <li><b>A real two-node bus</b><span>Two microcontroller boards with CAN transceivers and proper termination</span></li>
+        <li><b>J1939 in firmware</b><span>Porting my ID packing, signals and multi-packet transport to C</span></li>
+        <li><b>Arbitration on the wire</b><span>Logic-analyzer captures showing the lowest ID winning</span></li>
+        <li><b>Real timing</b><span>Hardware-timer measurements of latency and jitter</span></li>
+        <li><b>Benchmark rerun</b><span>The same 360-trial protocol, real bus vs. virtual bus</span></li>
+        <li><b>Into the dashboard</b><span>A USB-CAN adapter feeding live frames into TelemOps</span></li>
+      </ol>
+      <p class="note">No results yet. Numbers will appear here as each stage is measured, with a full DEVLOG in the repo.</p>
+    </div>
+  </div>
+</section>
+
+<section id="next">
+  <div class="wrap">
+    <p class="eyebrow">Roadmap</p>
+    <h2>What I'll build next</h2>
+    <p class="sub">The gaps I've found between my work so far and a production embedded role, and the order I'm closing them in.</p>
+    <div class="road">
+      <div class="step"><span class="tagn">Up next</span><h3>UDS diagnostics</h3><p class="locked">Not open to the public yet</p></div>
+      <div class="step"><span class="tagn">Up next</span><h3>ISO-TP transport</h3><p class="locked">Not open to the public yet</p></div>
+      <div class="step"><span class="tagn">Up next</span><h3>CAN FD</h3><p class="locked">Not open to the public yet</p></div>
+      <div class="step"><span class="tagn">Up next</span><h3>Register-level drivers</h3><p class="locked">Not open to the public yet</p></div>
+      <div class="step"><span class="tagn">Up next</span><h3>Interrupts and DMA</h3><p class="locked">Not open to the public yet</p></div>
+      <div class="step"><span class="tagn">Up next</span><h3>MISRA C and static analysis</h3><p class="locked">Not open to the public yet</p></div>
+      <div class="step"><span class="tagn">Up next</span><h3>AUTOSAR fundamentals</h3><p class="locked">Not open to the public yet</p></div>
+      <div class="step"><span class="tagn">Up next</span><h3>Bench debugging with scope and logic analyzer</h3><p class="locked">Not open to the public yet</p></div>
+      <div class="step"><span class="tagn">Up next</span><h3>Bootloaders and firmware updates</h3><p class="locked">Not open to the public yet</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap">
+    <div class="cta">
+      <div><h2>Let's talk embedded</h2><p><a class="mail" href="mailto:asifuzzamanucchwas@gmail.com" target="_blank" rel="noopener">asifuzzamanucchwas@gmail.com</a></p></div>
+      <div class="links">
+        <a class="btn primary" href="mailto:asifuzzamanucchwas@gmail.com" target="_blank" rel="noopener">Email me</a>
+        <a class="btn" href="https://www.linkedin.com/in/masifuzzaman" target="_blank" rel="noopener">LinkedIn</a>
+        <a class="btn" href="https://github.com/Asif-Ucchwas" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </div>
+  </div>
+</section>
+<footer><div class="wrap">© 2026 Md Asifuzzaman · <span class="crosslink">Also see my <a href="https://asif-ucchwas.github.io/" target="_blank" rel="noopener">Motion Planning</a> and <a href="https://asif-ucchwas.github.io/controls/" target="_blank" rel="noopener">Controls</a> pages</span></div></footer>
+<script>
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const $ = id => document.getElementById(id);
+
+/* ---------- CAN arbitration on an 11-bit standard ID ---------- */
+const NAMES = ["Brake ECU", "Engine ECU", "Steering ECU"];
+let ids = [0x064, 0x0C8, 0x066], arbTimer = 0;
+const bitsOf = id => Array.from({length:11}, (_, i) => (id >> (10 - i)) & 1);
+const hex3 = n => "0x" + n.toString(16).toUpperCase().padStart(3, "0");
+function buildTable(){
+  const t = $("arb");
+  let h = "<tr><th></th>" + Array.from({length:11}, (_, i) => `<th>ID${10 - i}</th>`).join("") + "<th></th></tr>";
+  ids.forEach((id, r) => {
+    h += `<tr data-r="${r}"><th class="node" scope="row">${innerWidth < 480 ? NAMES[r].replace(" ECU", "") : NAMES[r]}</th>` + bitsOf(id).map(b => `<td>${b}</td>`).join("") + `<td class="hex">${hex3(id)}</td></tr>`;
+  });
+  h += `<tr class="bus"><th class="node" scope="row">Bus</th>` + "<td>·</td>".repeat(11) + `<td class="hex"></td></tr>`;
+  t.innerHTML = h;
+  $("order").textContent = "";
+}
+function arbitrate(contenders){
+  // Returns {winner, lostAt: {row: bitIndex}} for one arbitration round.
+  let alive = contenders.slice(), lostAt = {}, busBits = [];
+  for(let i = 0; i < 11; i++){
+    const bits = alive.map(r => bitsOf(ids[r])[i]);
+    const bus = Math.min(...bits);
+    busBits.push(bus);
+    alive = alive.filter((r, k) => { if(bits[k] > bus){ lostAt[r] = i; return false; } return true; });
+  }
+  return {winner: alive[0], lostAt, busBits};
+}
+function runArb(){
+  clearTimeout(arbTimer); buildTable();
+  const rows = [...$("arb").querySelectorAll("tr[data-r]")];
+  const busCells = [...$("arb").querySelectorAll("tr.bus td")].slice(0, 11);
+  const {winner, lostAt, busBits} = arbitrate([0, 1, 2]);
+  const order = [...ids.keys()].sort((a, b) => ids[a] - ids[b]);
+  let i = 0;
+  $("arbRun").disabled = true;
+  const step = () => {
+    rows.forEach(tr => {
+      const r = +tr.dataset.r, cell = tr.children[i + 1];
+      if(lostAt[r] !== undefined && i > lostAt[r]){ cell.classList.add("off"); return; }
+      cell.classList.add("on");
+      if(lostAt[r] === i) cell.classList.add("lost");
+      else if(busBits[i] === 0 && bitsOf(ids[r])[i] === 0) cell.classList.add("dom");
+    });
+    busCells[i].textContent = busBits[i]; busCells[i].classList.add("on"); if(busBits[i] === 0) busCells[i].classList.add("dom");
+    i++;
+    if(i < 11) arbTimer = setTimeout(step, reduce ? 0 : 280);
+    else {
+      rows[winner].classList.add("win");
+      $("order").innerHTML = `<span class="ok">${NAMES[winner]} wins, lowest ID</span> <span>Then the others retry in ID order: ${order.slice(1).map(r => NAMES[r] + " (" + hex3(ids[r]) + ")").join(", then ")}</span>`;
+      $("arbRun").disabled = false;
+    }
+  };
+  step();
+}
+function newIds(){
+  clearTimeout(arbTimer); $("arbRun").disabled = false;
+  const base = 0x040 + Math.floor(Math.random() * 0x300);
+  const set = new Set([base]);
+  while(set.size < 3){ const flip = 1 << Math.floor(Math.random() * 6); set.add((base ^ flip ^ (Math.random() < .4 ? (1 << (6 + Math.floor(Math.random() * 3))) : 0)) & 0x7FF); }
+  ids = [...set];
+  buildTable();
+}
+$("arbRun").addEventListener("click", runArb);
+$("arbNew").addEventListener("click", newIds);
+buildTable();
+
+/* ---------- J1939 encoder (mirrors can-net/stage3_j1939/j1939_ids.py and j1939_signals.py) ---------- */
+const SIGS = {
+  eec1: {pri:3, pgn:61444, sa:0x00, min:0, max:8000, stepv:25, init:2500, unit:"rpm", off:3, enc:v => Math.floor(v/0.125)},
+  ccvs: {pri:6, pgn:65265, sa:0x00, min:0, max:250, stepv:0.5, init:88.5, unit:"km/h", off:1, enc:v => Math.floor(v*256)}
+};
+function renderJ(){
+  const s = SIGS[$("sig").value], v = parseFloat($("val").value);
+  const raw = Math.max(0, Math.min(0xFFFF, s.enc(v)));
+  const bytes = new Array(8).fill(0); bytes[s.off] = raw & 0xFF; bytes[s.off + 1] = raw >> 8;
+  const id = ((s.pri << 26) | (s.pgn << 8) | s.sa) >>> 0;
+  $("valOut").textContent = (s.unit === "rpm" ? v.toFixed(0) : v.toFixed(1)) + " " + s.unit;
+  $("canId").textContent = "0x" + id.toString(16).toUpperCase().padStart(8, "0");
+  $("bytes").innerHTML = bytes.map((b, i) => `<span class="${i === s.off || i === s.off + 1 ? "sig" : ""}">${b.toString(16).toUpperCase().padStart(2, "0")}</span>`).join("");
+  $("fPri").textContent = s.pri; $("fPgn").textContent = s.pgn; $("fSa").textContent = "0x" + s.sa.toString(16).toUpperCase().padStart(2, "0");
+}
+function setSig(){
+  const s = SIGS[$("sig").value], r = $("val");
+  r.min = s.min; r.max = s.max; r.step = s.stepv; r.value = s.init; renderJ();
+}
+$("sig").addEventListener("change", setSig);
+$("val").addEventListener("input", renderJ);
+setSig();
+
+/* ---------- Count-up results ---------- */
+function animate(el){
+  const target = parseFloat(el.dataset.count), dec = parseInt(el.dataset.dec || "0");
+  const fmt = n => dec ? n.toFixed(dec) : Math.round(n).toLocaleString("en-US");
+  if(reduce){ el.textContent = fmt(target); return; }
+  const t0 = performance.now(), dur = 1200;
+  const tick = now => { const k = Math.min(1,(now-t0)/dur), e = 1-Math.pow(1-k,3); el.textContent = fmt(target*e); if(k<1) requestAnimationFrame(tick); };
+  requestAnimationFrame(tick);
+}
+const io = "IntersectionObserver" in window ? new IntersectionObserver(entries=>{
+  entries.forEach(en=>{ if(!en.isIntersecting) return;
+    en.target.querySelectorAll("[data-count]").forEach(animate);
+    en.target.querySelectorAll("[data-bar]").forEach(b=>{ b.style.width = b.dataset.bar + "%"; });
+    io.unobserve(en.target); });
+},{threshold:.3}) : null;
+document.querySelectorAll(".res").forEach(r=>{
+  r.querySelectorAll("[data-bar]").forEach(b=>{ b.style.transition = reduce ? "none" : "width 1.2s cubic-bezier(.2,.8,.2,1)"; });
+  if(io) io.observe(r); else { r.querySelectorAll("[data-count]").forEach(animate); r.querySelectorAll("[data-bar]").forEach(b=>b.style.width=b.dataset.bar+"%"); }
+});
+</script>
+</body></html>
