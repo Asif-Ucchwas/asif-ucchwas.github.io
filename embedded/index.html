@@ -346,12 +346,19 @@ footer{padding:26px 0 40px;color:var(--soft);font-size:.84rem}
   .arb th.node{font-size:.72rem;padding-right:4px}
   .arb td.hex,.arb th:last-child{display:none}
 }
+/* embedded hero photo: subject stands just left of centre, so keep the left fade short */
+.hero-photo img{object-position:55% 40%}
+@media (min-width:861px){.hero-photo::after{background:
+  linear-gradient(90deg,var(--bg) 0%,color-mix(in srgb,var(--bg) 80%,transparent) 6%,color-mix(in srgb,var(--bg) 40%,transparent) 14%,color-mix(in srgb,var(--bg) 12%,transparent) 22%,transparent 30%),
+  linear-gradient(0deg,var(--bg) 0%,transparent 22%),
+  linear-gradient(180deg,color-mix(in srgb,var(--bg) 40%,transparent) 0%,transparent 16%)}}
+@media (max-width:860px){.hero-photo img{object-position:50% 38%}}
 
 </style>
 </head>
 <body>
 <header class="hero">
-  <div class="hero-photo"><img src="../photo.jpg" alt="Md Asifuzzaman at his graduation" width="1100" height="1481"></div>
+  <div class="hero-photo"><img src="photo.jpg" alt="Md Asifuzzaman at a space center, in front of a wall of astronaut crew portraits" width="1100" height="1467"></div>
   <div class="wrap hero-inner">
     <div class="hero-text">
       <h1><span class="ln kicker">Why You Consider Me As</span><span class="ln a">An</span><span class="ln hl">Embedded Systems Engineer</span><span class="ln paren">(Vehicle Networks)</span></h1>
