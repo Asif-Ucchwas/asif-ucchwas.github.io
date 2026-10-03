@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-QQLDDB9JBX"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-QQLDDB9JBX');</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Robotics Workstation Handbook · Md Asifuzzaman</title>
+<meta name="description" content="A free, hands-on handbook that takes you from a Windows PC to a GPU-ready Ubuntu 24.04 workstation with Docker, ROS 2 Jazzy, Nav2, Gazebo and NVIDIA Isaac Sim.">
+<meta property="og:title" content="The Robotics Workstation Handbook">
+<meta property="og:description" content="Free 54-page handbook: from a Windows PC to a GPU-ready Ubuntu machine with Docker, ROS 2, Nav2, Gazebo and Isaac Sim.">
+<meta property="og:type" content="book">
+<meta property="og:url" content="https://asif-ucchwas.github.io/handbook/">
+<meta property="og:image" content="https://asif-ucchwas.github.io/handbook/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://asif-ucchwas.github.io/handbook/og.jpg">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📘</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--night:#06122A;--deep:#0A2342;--ink:#1E293B;--soft:#5B6B80;--line:#DCE4EE;--paper:#F5F8FB;--teal:#2DD4BF;--tealD:#0D9488;--amber:#F59E0B;--coral:#FB7185;
+--sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;--cond:"IBM Plex Sans Condensed","Arial Narrow",system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,Consolas,monospace}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+body{margin:0;font:400 17px/1.65 var(--sans);color:var(--ink);background:#fff}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--amber);outline-offset:3px;border-radius:4px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+h1,h2,h3,h4{font-family:var(--cond);line-height:1.1;margin:0}
+code{font:500 .86em var(--mono);background:#EEF2F7;color:#0F2B46;padding:.08em .35em;border-radius:4px;word-break:break-word}
+
+/* hero */
+.hero{background:radial-gradient(1200px 600px at 80% 110%,#0E3354 0%,transparent 60%),var(--night);color:#E2E8F0;padding:28px 0 88px;overflow:hidden}
+.top{display:flex;justify-content:space-between;align-items:center;font-size:15px;margin-bottom:56px}
+.top a{text-decoration:none;color:#94A3B8} .top a:hover{color:#fff}
+.top b{font-family:var(--cond);color:#fff;font-size:17px;letter-spacing:.01em}
+.hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:56px;align-items:center}
+.hero h1{font-size:clamp(44px,6.4vw,76px);color:#fff;letter-spacing:-.01em;margin-bottom:22px}
+.hero .sub{font-size:clamp(18px,2vw,21px);line-height:1.5;color:#CBD5E1;max-width:34em;margin:0 0 30px}
+.cta{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:22px}
+.btn{display:inline-flex;align-items:center;gap:10px;font:600 17px var(--sans);padding:14px 22px;border-radius:10px;text-decoration:none;transition:background .15s,color .15s}
+.btn.primary{background:var(--teal);color:#04201C} .btn.primary:hover{background:#5EEAD4}
+.btn.ghost{border:1.5px solid #335070;color:#E2E8F0} .btn.ghost:hover{border-color:var(--teal);color:#fff}
+.btn svg{width:18px;height:18px}
+.meta{font-size:15px;color:#8EA2B8;margin:0}
+.book{justify-self:center;position:relative}
+.book img{display:block;width:min(360px,80vw);height:auto;border-radius:6px 10px 10px 6px;box-shadow:0 30px 60px -20px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.06);transform:rotate(2deg)}
+.book::before{content:"";position:absolute;inset:-40px;background:radial-gradient(closest-side,rgba(45,212,191,.22),transparent);z-index:-1}
+
+/* stack strip */
+.stack{border-bottom:1px solid var(--line);background:var(--paper)}
+.stack .wrap{display:grid;grid-template-columns:auto 1fr;gap:32px;align-items:center;padding-top:30px;padding-bottom:30px}
+.stack p{margin:0;font:600 18px var(--cond);color:var(--night)}
+.stack ul{display:flex;flex-wrap:wrap;gap:8px 10px;list-style:none;margin:0;padding:0}
+.stack li{font:500 14px var(--mono);color:#0F2B46;background:#fff;border:1px solid var(--line);padding:6px 11px;border-radius:7px}
+
+/* sections */
+.sec{padding:88px 0}
+.sec h2{font-size:clamp(32px,4vw,44px);color:var(--night);margin-bottom:14px}
+.lede{font-size:19px;color:var(--soft);max-width:40em;margin:0 0 44px}
+
+/* route */
+.route{position:relative;padding-left:46px}
+.route::before{content:"";position:absolute;left:15px;top:20px;bottom:20px;width:3px;border-radius:3px;background:linear-gradient(var(--tealD),#2563EB 30%,#7C3AED 50%,#EA580C 70%,#16A34A)}
+.pin{position:relative;display:flex;align-items:center;gap:14px;font:600 18px var(--cond);color:var(--night);margin:0 0 28px}
+.pin::before{content:"";position:absolute;left:-41px;width:22px;height:22px;border-radius:50%;background:#fff;border:4px solid var(--amber)}
+.pin.goal{margin:8px 0 0} .pin.goal::before{border-color:var(--coral);box-shadow:0 0 0 6px rgba(251,113,133,.18)}
+.pin span{font:400 15px var(--sans);color:var(--soft)}
+.leg{margin:0 0 30px}
+.leg-head{position:relative;padding:4px 0 14px}
+.leg-head::before{content:"";position:absolute;left:-39px;top:8px;width:18px;height:18px;border-radius:5px;background:var(--c)}
+.leg-part{font:600 15px var(--cond);color:var(--c)}
+.leg h3{font-size:26px;color:var(--night);margin:2px 0 6px}
+.leg-head p{margin:0;color:var(--soft);max-width:44em}
+.wps{list-style:none;margin:6px 0 0;padding:0;display:grid;grid-template-columns:repeat(2,1fr);gap:10px 28px}
+.wp{display:grid;grid-template-columns:36px 1fr;gap:4px;padding:12px 0;border-top:1px solid var(--line)}
+.wn{font:500 15px var(--mono);color:var(--c);padding-top:2px}
+.wp h4{font-size:19px;color:var(--night);margin-bottom:3px}
+.wp p{margin:0;font-size:15px;color:var(--soft);line-height:1.5}
+
+/* roles */
+.roles{background:var(--paper);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.rolelist{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:30px 36px}
+.rolelist h4{font-size:21px;color:var(--night);margin-bottom:6px;padding-top:14px;border-top:3px solid var(--teal)}
+.rolelist p{margin:0;color:var(--soft);font-size:16px}
+
+/* why */
+.why .wrap{display:grid;grid-template-columns:.8fr 1.2fr;gap:56px;align-items:start}
+.why blockquote{margin:0;font:600 clamp(24px,3vw,32px)/1.25 var(--cond);color:var(--tealD)}
+.why p{margin:0 0 16px}
+.sig{font:600 18px var(--cond);color:var(--night);margin-top:22px!important}
+.sig span{display:block;font:400 15px var(--sans);color:var(--soft)}
+
+/* subscribe */
+.sub-sec{background:var(--night);color:#E2E8F0}
+.sub-sec .wrap{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+.sub-sec h2{color:#fff}
+.sub-sec p{color:#B6C3D3;margin:0 0 22px}
+.sub-sec iframe{width:100%;height:320px;border:0;border-radius:12px;background:#fff}
+
+footer{padding:34px 0;font-size:14px;color:var(--soft)}
+footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
+footer nav{display:flex;flex-wrap:wrap;gap:18px}
+footer a{text-decoration:none} footer a:hover{color:var(--night);text-decoration:underline}
+
+@media (max-width:860px){
+ .hero{padding-bottom:64px} .top{margin-bottom:36px}
+ .hero-grid,.why .wrap,.sub-sec .wrap{grid-template-columns:1fr;gap:40px}
+ .book{order:-1} .book img{width:min(260px,70vw)}
+ .stack .wrap{grid-template-columns:1fr;gap:14px}
+ .wps{grid-template-columns:1fr}
+ .rolelist{grid-template-columns:1fr 1fr}
+ .sec{padding:64px 0}
+}
+@media (max-width:560px){ body{font-size:16px} .rolelist{grid-template-columns:1fr} .route{padding-left:40px} .btn{width:100%;justify-content:center} }
+</style>
+</head>
+<body>
+
+<header class="hero">
+ <div class="wrap">
+  <div class="top"><b>Md Asifuzzaman</b><a href="/">Portfolio</a></div>
+  <div class="hero-grid">
+   <div>
+    <h1>The Robotics Workstation Handbook</h1>
+    <p class="sub">A free, step-by-step handbook that takes you from a Windows PC to a GPU-ready Ubuntu 24.04 machine with Docker, ROS&nbsp;2 Jazzy, Nav2, Gazebo and NVIDIA Isaac&nbsp;Sim. Every command in order, with a check at the end of each chapter.</p>
+    <div class="cta">
+     <a class="btn primary" href="The_Robotics_Workstation_Handbook.pdf" download>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m6 11 6 6 6-6"/><path d="M4 21h16"/></svg>
+      Download the free PDF</a>
+     <a class="btn ghost" href="The_Robotics_Workstation_Handbook.pdf" target="_blank" rel="noopener">Read it in your browser</a>
+    </div>
+    <p class="meta">First edition, October 2026. 54 pages, 16 chapters, 57 command blocks.</p>
+   </div>
+   <div class="book"><img src="cover.jpg" width="910" height="1300" alt="Cover of The Robotics Workstation Handbook by Md Asifuzzaman, showing a robot following a planned path across a map to a goal"></div>
+  </div>
+ </div>
+</header>
+
+<section class="stack" aria-label="What you install">
+ <div class="wrap"><p>What you install</p>
+ <ul><li>Ubuntu 24.04 LTS</li><li>NVIDIA driver + CUDA</li><li>Timeshift</li><li>Git over SSH</li><li>VS Code</li><li>Docker</li><li>NVIDIA Container Toolkit</li><li>ROS 2 Jazzy</li><li>Nav2 + Gazebo</li><li>Isaac Sim 6.1</li></ul></div>
+</section>
+
+<section class="sec" id="route">
+ <div class="wrap">
+  <h2>The route through the book</h2>
+  <p class="lede">Sixteen chapters in five parts, in the order you do them. Each chapter ends with a test, so you know it worked before you move on.</p>
+  <div class="route">
+   <p class="pin">Start <span>A Windows PC with an NVIDIA RTX GPU and an empty second drive</span></p>
+   <section class="leg" style="--c:#0D9488"><div class="leg-head"><span class="leg-part">Part I</span><h3>Before you begin</h3><p>What you will build, what you need, and how to work through this handbook.</p></div><ol class="wps"><li class="wp"><span class="wn">1</span><div><h4>What you end up with</h4><p>Done when you know which tools you will install and why each one is there.</p></div></li><li class="wp"><span class="wn">2</span><div><h4>Before you start</h4><p>Done when your hardware meets the requirements and your important files are backed up.</p></div></li><li class="wp"><span class="wn">3</span><div><h4>The method</h4><p>Done when you understand the order of the chapters and the three habits that make it go smoothly.</p></div></li></ol></section><section class="leg" style="--c:#2563EB"><div class="leg-head"><span class="leg-part">Part II</span><h3>The operating system</h3><p>Prepare Windows, install Ubuntu 24.04 next to it, and protect the new system with snapshots.</p></div><ol class="wps"><li class="wp"><span class="wn">4</span><div><h4>Prepare Windows</h4><p>Done when the recovery key is stored off the PC and you know which drive is the empty one.</p></div></li><li class="wp"><span class="wn">5</span><div><h4>Install Ubuntu 24.04</h4><p>Done when Ubuntu reaches the login screen and you can log in.</p></div></li><li class="wp"><span class="wn">6</span><div><h4>First boot, update and base tools</h4><p>Done when <code>git --version</code> prints a version number and <code>nvidia-smi</code> shows your GPU.</p></div></li><li class="wp"><span class="wn">7</span><div><h4>Backups with Timeshift on a USB stick</h4><p>Done when Timeshift lists a snapshot and its footer names <code>/dev/sda1</code>.</p></div></li></ol></section><section class="leg" style="--c:#7C3AED"><div class="leg-head"><span class="leg-part">Part III</span><h3>Everyday tools</h3><p>Git over SSH, VS Code, and Docker with GPU access: the tools every robotics team uses daily.</p></div><ol class="wps"><li class="wp"><span class="wn">8</span><div><h4>Git and GitHub over SSH</h4><p>Done when a clone finishes and the repository&#8217;s files appear in <code>~/projects</code>.</p></div></li><li class="wp"><span class="wn">9</span><div><h4>VS Code and extensions</h4><p>Done when a folder opens in VS Code and the Restricted Mode bar is gone.</p></div></li><li class="wp"><span class="wn">10</span><div><h4>Docker and the NVIDIA Container Toolkit</h4><p>Done when a container prints the same GPU table you saw on the host.</p></div></li></ol></section><section class="leg" style="--c:#EA580C"><div class="leg-head"><span class="leg-part">Part IV</span><h3>Robotics</h3><p>ROS 2 Jazzy, Nav2 in Gazebo, and NVIDIA Isaac Sim, tested end to end.</p></div><ol class="wps"><li class="wp"><span class="wn">11</span><div><h4>ROS 2 Jazzy, Nav2, TurtleBot3 and Gazebo</h4><p>Done when <code>ros2 pkg list</code> shows <code>nav2_bringup</code> and <code>turtlebot3_gazebo</code>.</p></div></li><li class="wp"><span class="wn">12</span><div><h4>Workspace and first simulation test</h4><p>Done when Gazebo and RViz are open and the terminal ends with <code>Goal succeeded</code>.</p></div></li><li class="wp"><span class="wn">13</span><div><h4>Isaac Sim 6.1</h4><p>Done when the window opens, the log prints <code>app ready</code> and the sphere falls onto the plane.</p></div></li></ol></section><section class="leg" style="--c:#16A34A"><div class="leg-head"><span class="leg-part">Part V</span><h3>Polish and troubleshooting</h3><p>A clean boot menu, useful extra tools, and fixes for the problems people hit most.</p></div><ol class="wps"><li class="wp"><span class="wn">14</span><div><h4>Tidy the boot menu and speed up startup</h4><p>Done when the menu lists Ubuntu and Windows and both start, and <code>systemd-analyze</code> shows the new timing.</p></div></li><li class="wp"><span class="wn">15</span><div><h4>Optional tools and Python environments</h4><p>Done when the tools you chose are installed and the C++ example prints its message.</p></div></li><li class="wp"><span class="wn">16</span><div><h4>Troubleshooting and final checklist</h4><p>Done when every box in the final checklist is ticked.</p></div></li></ol></section>
+   <p class="pin goal">Goal <span>A workstation ready for planners, perception models and simulation</span></p>
+  </div>
+ </div>
+</section>
+
+<section class="sec roles" id="who">
+ <div class="wrap">
+  <h2>Who it is for</h2>
+  <p class="lede">Anyone aiming for a robotics or autonomy role who wants to do the setup properly, once, and understand every step.</p>
+  <ul class="rolelist"><li><h4>Motion planning</h4><p>You design the planners in Nav2 and test them in Gazebo and Isaac Sim.</p></li><li><h4>Autonomy and self-driving</h4><p>You run full stacks like Autoware in containers, with ROS&nbsp;2 tying planning, perception and control together.</p></li><li><h4>Perception</h4><p>You need the GPU driver, CUDA inside Docker, and Isaac Sim&#8217;s camera and LiDAR data.</p></li><li><h4>Simulation</h4><p>You build worlds and sensor models in Gazebo and Isaac Sim.</p></li><li><h4>Robotics software</h4><p>You write the ROS&nbsp;2 nodes, build with colcon and ship code through Git.</p></li><li><h4>Controls</h4><p>You debug C++ with gdb and valgrind and close the loop on planned motion.</p></li></ul>
+ </div>
+</section>
+
+<section class="sec why" id="why">
+ <div class="wrap">
+  <blockquote>When I decided to work in robotics and autonomy, the first real obstacle was not an algorithm. It was the machine.</blockquote>
+  <div>
+   <p>Before I could test a single planner, I had to get Ubuntu, GPU drivers, Docker, ROS&nbsp;2 and a simulator working together on one computer. The resources were everywhere, but scattered, and every video took a long time to reach the part where you actually type the commands.</p>
+   <p>There is no real shortcut around this stack. So I wrote down the exact path that worked on my own machine: every command in order, with a check at the end of each chapter so you know you are on track.</p>
+   <p class="sig">Md Asifuzzaman<span>Beaumont, Texas. Focusing on motion planning for robotics and autonomous vehicles.</span></p>
+  </div>
+ </div>
+</section>
+
+<section class="sec sub-sec" id="subscribe">
+ <div class="wrap">
+  <div>
+   <h2>Get the next edition</h2>
+   <p>Software versions change quickly. Subscribe to hear when the handbook is updated and when I publish new technical writing.</p>
+   <a class="btn primary" href="The_Robotics_Workstation_Handbook.pdf" download>Download the free PDF</a>
+  </div>
+  <iframe src="https://mdasifuzzaman.substack.com/embed" title="Subscribe to Md Asifuzzaman on Substack" scrolling="no"></iframe>
+ </div>
+</section>
+
+<footer>
+ <div class="wrap">
+  <span>&copy; 2026 Md Asifuzzaman. Free to share in its complete, unmodified form.</span>
+  <nav aria-label="Links"><a href="/">Portfolio</a><a href="https://github.com/Asif-Ucchwas">GitHub</a><a href="https://www.linkedin.com/in/masifuzzaman">LinkedIn</a><a href="https://mdasifuzzaman.substack.com">Substack</a></nav>
+ </div>
+</footer>
+</body>
+</html>
