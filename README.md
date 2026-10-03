@@ -12,6 +12,8 @@ Each page also lists the project I'm building now and the gaps I'm closing next.
 
 ## Free handbook
 
+<a href="https://asif-ucchwas.github.io/handbook/"><img src="handbook/og.jpg" alt="The Robotics Workstation Handbook" width="600"></a>
+
 **The Robotics Workstation Handbook**: a free, step-by-step guide from a Windows PC to a GPU-ready Ubuntu workstation with Docker, ROS 2, Nav2, Gazebo and Isaac Sim.
 
 Book page and free PDF: https://asif-ucchwas.github.io/handbook/
