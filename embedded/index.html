@@ -12,18 +12,18 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Why You Consider Me As An Embedded Systems Engineer – Vehicle Networks · Md Asifuzzaman</title>
-<meta name="description" content="Embedded systems engineer for vehicle networks: J1939 over SocketCAN, Zephyr RTOS bridged to CAN, 360-trial bus benchmarks, and a live CAN arbitration demo.">
-<meta property="og:title" content="Why You Consider Me As An Embedded Systems Engineer – Vehicle Networks · Md Asifuzzaman">
+<title>Why You Consider Me As An Embedded Validation Engineer – Safety-Critical Firmware · Md Asifuzzaman</title>
+<meta name="description" content="Embedded validation engineer: fault injection on safety-critical Zephyr firmware (200 of 200 caught), a J1939 CAN stack, 64 unit tests with CI, and HIL-Bench in progress.">
+<meta property="og:title" content="Why You Consider Me As An Embedded Validation Engineer – Safety-Critical Firmware · Md Asifuzzaman">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://asif-ucchwas.github.io/embedded/">
-<meta property="og:image" content="https://asif-ucchwas.github.io/embedded/preview.jpg?v=1">
+<meta property="og:image" content="https://asif-ucchwas.github.io/embedded/preview.jpg?v=2">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="627">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://asif-ucchwas.github.io/embedded/preview.jpg?v=1">
+<meta name="twitter:image" content="https://asif-ucchwas.github.io/embedded/preview.jpg?v=2">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔌</text></svg>">
-<meta property="og:description" content="Embedded systems engineer for vehicle networks: J1939 over SocketCAN, Zephyr RTOS on CAN, 360-trial bus benchmarks, and a live demo to try.">
+<meta property="og:description" content="Embedded validation engineer: fault injection on safety-critical Zephyr firmware, a J1939 CAN stack, 64 unit tests with CI, and HIL-Bench in progress.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Playfair+Display:wght@700;900&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -379,6 +379,15 @@ footer{padding:26px 0 40px;color:var(--soft);font-size:.84rem}
 .sub-frame{display:block;width:100%;height:320px;border:0;border-radius:12px;background:#fff;color-scheme:light}
 @media (max-width:760px){.sub-card{grid-template-columns:1fr;padding:18px}}
 
+
+/* ongoing cards: several stacked, done and planned states */
+.ongoing + .ongoing{margin-top:16px}
+.live-tag.planned{background:var(--line);color:var(--soft)}
+.live-tag.planned::before{animation:none;background:var(--soft)}
+.plan li.done{border-color:var(--good)}
+.plan li.done::before{content:"\2713";background:var(--good);border-color:var(--good);color:#fff}
+.ongoing code{font-family:var(--mono,monospace);font-size:.88em}
+.ongoing > p a{color:var(--good);font-weight:600}
 </style>
 </head>
 <body>
@@ -386,7 +395,7 @@ footer{padding:26px 0 40px;color:var(--soft);font-size:.84rem}
   <div class="hero-photo"><img src="photo.jpg" alt="Md Asifuzzaman at a space center, in front of a wall of astronaut crew portraits" width="1100" height="1467"></div>
   <div class="wrap hero-inner">
     <div class="hero-text">
-      <h1><span class="ln kicker">Why You Consider Me As</span><span class="ln a">An</span><span class="ln hl">Embedded Systems Engineer</span><span class="ln net"><i aria-hidden="true">–</i> Vehicle Networks</span></h1>
+      <h1><span class="ln kicker">Why You Consider Me As</span><span class="ln a">An</span><span class="ln hl">Embedded Validation Engineer</span><span class="ln net"><i aria-hidden="true">–</i> Safety-Critical Firmware</span></h1>
       <svg class="traj" id="sigSvg" viewBox="0 0 640 46" role="button" tabindex="0" aria-label="A CAN frame's ID bits as a signal. Activate to send the next ECU's frame.">
         <path id="trajPath" d="M8 34 H59.7 H111.3 H163.0 V12 H214.7 V34 H266.3 V12 H318.0 V34 H369.7 V12 H421.3 H473.0 V34 H524.7 V12 H576.3 V34 H628.0" />
         <circle class="traj-start" cx="8" cy="34" r="6"/>
@@ -411,7 +420,7 @@ footer{padding:26px 0 40px;color:var(--soft);font-size:.84rem}
 </header>
 <section class="pillars-sec">
   <div class="wrap pillars">
-    <div class="pillar"><b>Talk</b><span>CAN, J1939 and DBC, the language vehicle ECUs speak</span></div><div class="pillar"><b>Schedule</b><span>Zephyr RTOS tasks, preemption, watchdogs and safe states</span></div><div class="pillar"><b>Prove</b><span>360-trial bus benchmarks, unit tests and CI, load tests</span></div>
+    <div class="pillar"><b>Talk</b><span>CAN, J1939 and DBC, the language vehicle ECUs speak</span></div><div class="pillar"><b>Schedule</b><span>Zephyr RTOS tasks, preemption, watchdogs and safe states</span></div><div class="pillar"><b>Prove</b><span>200 of 200 faults caught, 64 unit tests, CI on every push, 360-trial benchmarks</span></div>
   </div>
 </section>
 
@@ -455,7 +464,7 @@ footer{padding:26px 0 40px;color:var(--soft);font-size:.84rem}
   <div class="wrap">
     <p class="eyebrow">Measured results</p>
     <h2>Numbers from real experiments</h2>
-    <p class="sub">CAN, UDP and TCP under the same load, multi-ECU protocol stress tests, a real-time control loop and a telemetry pipeline, all measured.</p>
+    <p class="sub">Fault injection on safety-critical firmware, test suites across four repositories, CAN, UDP and TCP under the same load, and a telemetry pipeline, all measured.</p>
     <div class="results">
       <div class="res wide">
         <div class="big"><span data-count="0">0</span>% drop at <span data-count="501.8" data-dec="1">0</span> msg/s</div>
@@ -469,6 +478,9 @@ footer{padding:26px 0 40px;color:var(--soft);font-size:.84rem}
       <div class="res"><div class="big"><span data-count="3">0</span> ECUs, <span data-count="21">0</span> frames</div><div class="lbl">Interleaved J1939 multi-packet transfers, every message reassembled correctly</div></div>
       <div class="res"><div class="big"><span data-count="35">0</span> tests</div><div class="lbl">Unit tests on the J1939 protocol math, run by CI on every push</div></div>
       <div class="res"><div class="big"><span data-count="5195">0</span>/s</div><div class="lbl">CAN frames ingested with zero loss in my telemetry pipeline, ceiling found at about 9,700/s</div></div>
+      <div class="res"><div class="big"><span data-count="200">0</span> of 200</div><div class="lbl">Faulty sensor samples caught by my dual-sensor voting logic under deliberate fault injection, with zero false positives.</div></div>
+      <div class="res"><div class="big">0.00 rad</div><div class="lbl">Final actuator drift after a mid-motion fault once I redesigned the safe state, down from 0.48 rad (0.16 rad peak before recovery).</div></div>
+      <div class="res"><div class="big"><span data-count="64">0</span> tests</div><div class="lbl">Unit tests across four repositories, with honest per-file coverage instead of one blended number.</div></div>
       <div class="res full"><div class="big"><span data-count="0">0</span> of 2,999 deadlines missed</div><div class="lbl">1 kHz Zephyr RTOS control task in C under competing load, with a watchdog that catches a hung task in about 4 ms. Measured in simulation (native_sim).</div></div>
     </div>
   </div>
@@ -480,22 +492,45 @@ footer{padding:26px 0 40px;color:var(--soft);font-size:.84rem}
     <h2>What I've built</h2>
     <div class="projects">
       <article class="proj lead">
+        <h3>ControlLoop-RT: safety-critical firmware and fault-injection testing</h3>
+        <p>The embedded side of my controls project, built to be broken on purpose. <a href="https://github.com/Asif-Ucchwas/controlloop-rt" target="_blank" rel="noopener">View the repo</a></p>
+        <ul>
+          <li>A <span class="metric">1 kHz Zephyr task</span> in C driven by a timer interrupt, with priority preemption verified and zero jitter measured in simulation (native_sim).</li>
+          <li>Watchdog, dual-sensor voting and an active-hold safe state, validated by deliberate fault injection: <span class="metric">200 of 200</span> faulty samples caught, zero false positives.</li>
+          <li>Redesigned the safe state, cutting uncontrolled actuator coast from 0.48 rad to <span class="metric">0.00 rad</span>.</li>
+          <li>14-test pytest suite (100% coverage on controller math); the zero-jitter result reproduced on a clean toolchain rebuild. ISO 26262 mapping is documented, not certified.</li>
+        </ul>
+        <div class="chips"><span class="chip">C</span><span class="chip">Zephyr RTOS</span><span class="chip">native_sim</span><span class="chip">Fault injection</span><span class="chip">Watchdog</span><span class="chip">pytest</span><span class="chip">ISO 26262 (documented)</span></div>
+      </article>
+      <article class="proj">
         <h3>CAN-Net: embedded networking and a J1939 stack</h3>
         <p>A from-scratch vehicle networking stack, from transport basics to an RTOS on the bus. <a href="https://github.com/Asif-Ucchwas/can-net" target="_blank" rel="noopener">View the repo</a></p>
         <ul>
           <li>SocketCAN with kernel-level ID filtering, DBC encoding and decoding with cantools, and documented bus contention between three nodes.</li>
-          <li>J1939 by hand: 29-bit IDs, real SPNs (engine and vehicle speed), BAM multi-packet transport and request/response diagnostics, stress-tested with <span class="metric">3 interleaving ECUs</span>.</li>
-          <li>Zephyr RTOS bridged to Linux CAN: its CAN task's frames matched <span class="metric">byte for byte</span> on the shared bus, with preemption verified.</li>
+          <li>J1939 by hand: 29-bit IDs, real SPNs, BAM multi-packet transport and request/response diagnostics, stress-tested with <span class="metric">3 interleaving ECUs</span>.</li>
+          <li>Zephyr RTOS bridged to Linux CAN: its frames matched <span class="metric">byte for byte</span> on the shared bus, with preemption verified.</li>
           <li><span class="metric">360-trial benchmark</span>, 35 unit tests and GitHub Actions CI.</li>
         </ul>
-        <div class="chips"><span class="chip">Python</span><span class="chip">C</span><span class="chip">SocketCAN</span><span class="chip">python-can</span><span class="chip">cantools</span><span class="chip">J1939</span><span class="chip">Zephyr</span><span class="chip">GitHub Actions</span></div>
+        <div class="chips"><span class="chip">Python</span><span class="chip">C</span><span class="chip">SocketCAN</span><span class="chip">J1939</span><span class="chip">Zephyr</span><span class="chip">GitHub Actions</span></div>
       </article>
       <article class="proj">
-        <h3>ControlLoop-RT: real-time firmware</h3>
-        <p>The embedded side of my controls project. <a href="https://github.com/Asif-Ucchwas/controlloop-rt" target="_blank" rel="noopener">View the repo</a></p>
-        <ul><li>A <span class="metric">1 kHz Zephyr task</span> in C driven by a timer interrupt, with priority preemption verified.</li>
-        <li>Watchdog, dual-sensor voting (200 of 200 faulty samples caught) and an active-hold safe state.</li></ul>
-        <div class="chips"><span class="chip">C</span><span class="chip">Zephyr RTOS</span><span class="chip">Watchdog</span><span class="chip">ISO 26262 (documented)</span></div>
+        <h3>Cross-repository testing and CI/CD hardening</h3>
+        <p>A test and CI pass across four of my codebases.</p>
+        <ul>
+          <li>Retrofitted Percept-Nav, CAN-Net, TelemOps and ControlLoop-RT with <span class="metric">64 unit tests</span> and per-file coverage reporting.</li>
+          <li>Audited declared dependencies against the code and fixed 10 undeclared ROS2 dependencies.</li>
+          <li>GitHub Actions CI on CAN-Net runs its full suite on every push.</li>
+        </ul>
+        <div class="chips"><span class="chip">pytest</span><span class="chip">gtest</span><span class="chip">GitHub Actions</span><span class="chip">coverage.py</span><span class="chip">gcov/lcov</span><span class="chip">CMake</span><span class="chip">colcon</span></div>
+      </article>
+      <article class="proj">
+        <h3>Planner regression testing (research)</h3>
+        <p>Automated test pipelines from my graduate research at Lamar University.</p>
+        <ul>
+          <li>An automated regression pipeline evaluating four planners at three obstacle densities, isolating failures from per-trial logs.</li>
+          <li>A <span class="metric">50+ trial test plan</span> for a hybrid A*-RRT* planner on live ROS2 nodes: 98% vs. 60% success over RRT*. Fixed a Docker build conflict.</li>
+        </ul>
+        <div class="chips"><span class="chip">ROS2</span><span class="chip">Python</span><span class="chip">Docker</span><span class="chip">Regression testing</span></div>
       </article>
       <article class="proj">
         <h3>TelemOps: CAN telemetry pipeline</h3>
@@ -528,8 +563,8 @@ footer{padding:26px 0 40px;color:var(--soft);font-size:.84rem}
     <h2>Tools I build with</h2>
     <div class="stack">
       <div class="stk"><h3>Protocols</h3><div class="chips"><span class="chip">CAN</span><span class="chip">SocketCAN</span><span class="chip">J1939</span><span class="chip">DBC</span><span class="chip">TCP / UDP</span><span class="chip">Serial</span></div></div>
-      <div class="stk"><h3>Embedded and RTOS</h3><div class="chips"><span class="chip">C</span><span class="chip">Zephyr RTOS</span><span class="chip">QEMU Cortex-M3</span><span class="chip">ESP8266</span><span class="chip">Arduino</span></div></div>
-      <div class="stk"><h3>Tooling and testing</h3><div class="chips"><span class="chip">python-can</span><span class="chip">cantools</span><span class="chip">can-utils</span><span class="chip">Docker</span><span class="chip">pytest</span><span class="chip">GitHub Actions</span></div></div>
+      <div class="stk"><h3>Embedded and RTOS</h3><div class="chips"><span class="chip">C</span><span class="chip">Zephyr RTOS</span><span class="chip">native_sim</span><span class="chip">QEMU Cortex-M3</span><span class="chip">ESP8266</span><span class="chip">Arduino</span></div></div>
+      <div class="stk"><h3>Tooling and testing</h3><div class="chips"><span class="chip">python-can</span><span class="chip">cantools</span><span class="chip">can-utils</span><span class="chip">Docker</span><span class="chip">pytest</span><span class="chip">gtest</span><span class="chip">gcov / lcov</span><span class="chip">CMake</span><span class="chip">SCons</span><span class="chip">Git</span><span class="chip">GitHub Actions</span></div></div>
     </div>
   </div>
 </section>
@@ -538,9 +573,36 @@ footer{padding:26px 0 40px;color:var(--soft);font-size:.84rem}
   <div class="wrap">
     <p class="eyebrow">Ongoing</p>
     <h2>What I'm building now</h2>
-    <p class="sub">Taking CAN-Net off the virtual bus and onto real hardware, where arbitration and timing are physical.</p>
+    <p class="sub">Three builds that move my work from simulation toward real hardware and automated, repeatable testing. Each shows exactly what is finished and what is still a plan.</p>
+
     <div class="ongoing">
-      <div class="ongoing-head"><h3>CAN-Net on real hardware</h3><span class="live-tag">In progress</span></div>
+      <div class="ongoing-head"><h3>HIL-Bench: sim-to-real gap in fault-injection testing</h3><span class="live-tag">In progress · Stage 1 of 9 complete</span></div>
+      <p>One control firmware and one test protocol, run in simulation, on a low-cost hardware-in-the-loop rig and on a real robot car, to measure whether a fault-injection result from simulation holds on real hardware. <a href="https://github.com/Asif-Ucchwas/hil-bench" target="_blank" rel="noopener">View the repo</a></p>
+      <ol class="plan">
+        <li class="done"><b>Literature review, fault taxonomy, test protocol</b><span>Done: a three-tier taxonomy (software-observable, sim-representable, hardware-only) and one protocol every setup follows</span></li>
+        <li><b>Firmware and fault injection in simulation</b><span>Control loop with watchdog and voting on native_sim, injection hooks, unit tests, automated pass/fail scoring, and a GO / NO-GO release gate</span></li>
+        <li><b>Real board and a board-level test plan</b><span>Power, pins, sensors, actuators and timing, with every failure logged as a debug record</span></li>
+        <li><b>Independent timing evidence</b><span>Logic-analyzer capture and a Python host harness for triggering and logging</span></li>
+        <li><b>Low-cost HIL rig</b><span>The same unmodified firmware against a plant emulated on a second board</span></li>
+        <li><b>Campaigns and comparison</b><span>Simulation, HIL rig and robot car, compared with statistical tests</span></li>
+      </ol>
+      <p class="note">Stage 1 is complete. Everything after it is a plan, with no results yet. Numbers will appear here as each stage is measured, with a DEVLOG in the repo. The release gate and the board test plan are designed for this project, not production release or board validation.</p>
+    </div>
+
+    <div class="ongoing">
+      <div class="ongoing-head"><h3>WireLink-CI: raw Ethernet framing, SCons and Jenkins CI</h3><span class="live-tag">In progress · Stage 1 of 4 complete</span></div>
+      <p>A custom Layer-2 Ethernet frame in C, sent over a real cable to a Raspberry Pi and tested by a Jenkins pipeline that has to turn red when I break it on purpose. <a href="https://github.com/Asif-Ucchwas/wirelink-ci" target="_blank" rel="noopener">View the repo</a></p>
+      <ol class="plan">
+        <li class="done"><b>SCons build and frame library</b><span>Done: own EtherType (0x88B5), hand-written CRC-32, 129 unit checks, green <code>scons -Q test</code></span></li>
+        <li><b>Physical link to a Raspberry Pi</b><span>Raw sockets, six pytest link tests, a tcpdump capture and an unplug test</span></li>
+        <li><b>Jenkins pipeline</b><span>Build, deploy to the Pi, run the link tests; green, then red on an injected defect, then green again</span></li>
+        <li><b>Write-up and ship</b><span>README with diagram, screenshots and the capture file</span></li>
+      </ol>
+      <p class="note">Plain Ethernet with a custom EtherType, not Automotive Ethernet. It uses its own CRC-32 because the network card already handles the real Ethernet checksum. Jenkins is local and single-node, on a lab bench, not production.</p>
+    </div>
+
+    <div class="ongoing">
+      <div class="ongoing-head"><h3>CAN-Net on real hardware</h3><span class="live-tag planned">Planned</span></div>
       <p>Two microcontroller nodes on a real CAN bus, running my J1939 stack in C firmware, measured against my virtual-bus results.</p>
       <ol class="plan">
         <li><b>A real two-node bus</b><span>Two microcontroller boards with CAN transceivers and proper termination</span></li>
@@ -550,7 +612,7 @@ footer{padding:26px 0 40px;color:var(--soft);font-size:.84rem}
         <li><b>Benchmark rerun</b><span>The same 360-trial protocol, real bus vs. virtual bus</span></li>
         <li><b>Into the dashboard</b><span>A USB-CAN adapter feeding live frames into TelemOps</span></li>
       </ol>
-      <p class="note">No results yet. Numbers will appear here as each stage is measured, with a full DEVLOG in the repo.</p>
+      <p class="note">Not started. No results yet.</p>
     </div>
   </div>
 </section>
@@ -559,17 +621,14 @@ footer{padding:26px 0 40px;color:var(--soft);font-size:.84rem}
   <div class="wrap">
     <p class="eyebrow">Roadmap</p>
     <h2>What I'll build next</h2>
-    <p class="sub">The gaps I've found between my work so far and a production embedded role, and the order I'm closing them in.</p>
+    <p class="sub">The gaps I've found between my work so far and a validation role, and the order I'm closing them. Items marked "Part of HIL-Bench" are in the plan above and not yet built.</p>
     <div class="road">
+      <div class="step"><span class="tagn">Part of HIL-Bench</span><h3>Release gate with GO / NO-GO</h3><p>Written criteria and a script that decides whether a firmware version ships, with a sign-off report per version.</p></div>
+      <div class="step"><span class="tagn">Part of HIL-Bench</span><h3>Board-level test plan</h3><p>A written plan run on the real board: power, pins, sensors, actuators, timing.</p></div>
+      <div class="step"><span class="tagn">Part of HIL-Bench</span><h3>Bench debugging with a logic analyzer</h3><p>Independent timing evidence instead of firmware self-reports.</p></div>
+      <div class="step"><span class="tagn">Up next</span><h3>ISO-TP transport and CAN FD</h3><p class="locked">Not open to the public yet</p></div>
       <div class="step"><span class="tagn">Up next</span><h3>UDS diagnostics</h3><p class="locked">Not open to the public yet</p></div>
-      <div class="step"><span class="tagn">Up next</span><h3>ISO-TP transport</h3><p class="locked">Not open to the public yet</p></div>
-      <div class="step"><span class="tagn">Up next</span><h3>CAN FD</h3><p class="locked">Not open to the public yet</p></div>
-      <div class="step"><span class="tagn">Up next</span><h3>Register-level drivers</h3><p class="locked">Not open to the public yet</p></div>
-      <div class="step"><span class="tagn">Up next</span><h3>Interrupts and DMA</h3><p class="locked">Not open to the public yet</p></div>
       <div class="step"><span class="tagn">Up next</span><h3>MISRA C and static analysis</h3><p class="locked">Not open to the public yet</p></div>
-      <div class="step"><span class="tagn">Up next</span><h3>AUTOSAR fundamentals</h3><p class="locked">Not open to the public yet</p></div>
-      <div class="step"><span class="tagn">Up next</span><h3>Bench debugging with scope and logic analyzer</h3><p class="locked">Not open to the public yet</p></div>
-      <div class="step"><span class="tagn">Up next</span><h3>Bootloaders and firmware updates</h3><p class="locked">Not open to the public yet</p></div>
     </div>
   </div>
 </section>
@@ -586,7 +645,7 @@ footer{padding:26px 0 40px;color:var(--soft);font-size:.84rem}
 <section id="contact">
   <div class="wrap">
     <div class="cta">
-      <div><h2>Let's talk embedded</h2><p><a class="mail" href="mailto:asifuzzamanucchwas@gmail.com" target="_blank" rel="noopener">asifuzzamanucchwas@gmail.com</a></p></div>
+      <div><h2>Let's talk embedded validation</h2><p><a class="mail" href="mailto:asifuzzamanucchwas@gmail.com" target="_blank" rel="noopener">asifuzzamanucchwas@gmail.com</a></p></div>
       <div class="links">
         <a class="btn primary" href="mailto:asifuzzamanucchwas@gmail.com" target="_blank" rel="noopener">Email me</a>
         <a class="btn" href="https://www.linkedin.com/in/masifuzzaman" target="_blank" rel="noopener">LinkedIn</a>
