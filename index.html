@@ -13,7 +13,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Why You Consider Me As A Motion Planning Engineer · Md Asifuzzaman</title>
-<meta name="description" content="Motion planning engineer: A*-guided corridor RRT* (98% vs 60% success over RRT*), live in-browser demo, C++ Nav2 plugins, camera-LiDAR fusion.">
+<meta name="description" content="Motion planning engineer: A*-guided corridor RRT*, honestly re-evaluated on 130 maps against stronger baselines; live in-browser demo, C++ Nav2 plugins, camera-LiDAR fusion.">
 <meta property="og:title" content="Why You Consider Me As A Motion Planning Engineer · Md Asifuzzaman">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://asif-ucchwas.github.io/">
@@ -23,7 +23,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://asif-ucchwas.github.io/preview.png?v=5">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧭</text></svg>">
-<meta property="og:description" content="Motion planning engineer with ROS2, C++ and Nav2: 98% planner success vs 60% for RRT*, 44% lower localization error, and a live demo to try.">
+<meta property="og:description" content="Motion planning engineer with ROS2, C++ and Nav2: a planner re-evaluated honestly on 130 maps (43,420 runs), plus a live demo to try.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Playfair+Display:wght@700;900&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -374,25 +374,21 @@ footer{padding:26px 0 40px;color:var(--soft);font-size:.84rem}
   <div class="wrap">
     <p class="eyebrow">Measured results</p>
     <h2>Numbers from real experiments</h2>
-    <p class="sub">Four planners, three obstacle densities, 50+ trials each, plus my perception and planning projects.</p>
+    <p class="sub">A re-evaluation of my thesis planner on 130 seeded maps (43,420 planner runs, 7 planners, exact collision checker), plus my perception and planning projects.</p>
     <div class="results">
       <div class="res wide">
-        <div class="big"><span data-count="98">0</span>% <small style="font-size:1.2rem;color:var(--soft)">vs</small> <span data-count="60">0</span>%</div>
-        <div class="lbl">Success rate, my planner vs. standard RRT*</div>
+        <div class="big"><span data-count="100">0</span> <small style="font-size:1.2rem;color:var(--soft)">vs</small> <span data-count="49">0</span> <small style="font-size:1.2rem;color:var(--soft)">of 130 maps</small></div>
+        <div class="lbl">Maps solved, my corridor planner vs. plain RRT* at the thesis budget (exact collision rule)</div>
         <div class="cmp">
-          <div class="row"><span>Mine</span><div class="track"><i data-bar="98" style="background:var(--good)"></i></div><b>98%</b></div>
-          <div class="row"><span>RRT*</span><div class="track"><i data-bar="60" style="background:var(--bad)"></i></div><b>60%</b></div>
+          <div class="row"><span>Mine</span><div class="track"><i data-bar="77" style="background:var(--good)"></i></div><b>100</b></div>
+          <div class="row"><span>RRT*</span><div class="track"><i data-bar="38" style="background:var(--bad)"></i></div><b>49</b></div>
         </div>
       </div>
       <div class="res">
-        <div class="big"><span data-count="90">0</span>%+</div>
-        <div class="lbl">Success at high obstacle density, where RRT* fell to 40%</div>
-        <div class="cmp">
-          <div class="row"><span>Mine</span><div class="track"><i data-bar="90" style="background:var(--good)"></i></div><b>90%+</b></div>
-          <div class="row"><span>RRT*</span><div class="track"><i data-bar="40" style="background:var(--bad)"></i></div><b>40%</b></div>
-        </div>
+        <div class="big"><span data-count="43420">0</span></div>
+        <div class="lbl">Planner runs in the re-evaluation: 130 seeded maps, 7 planners, exact collision checker</div>
       </div>
-      <div class="res"><div class="big"><span data-count="5.87" data-dec="2">0</span>%</div><div class="lbl">Shorter paths than RRT*</div></div>
+      <div class="res"><div class="big"><span data-count="0.4" data-dec="1">0</span>&ndash;1.2%</div><div class="lbl">Shorter than tightened Theta*, at 6.5&ndash;33.7&times; the planning time. A small gain for a large cost, reported as measured.</div></div>
       <div class="res"><div class="big"><span data-count="44.1" data-dec="1">0</span>%</div><div class="lbl">Lower localization error from Kalman filter fusion</div></div>
       <div class="res"><div class="big"><span data-count="400">0</span> / 0</div><div class="lbl">Reeds-Shepp tests / discrepancies against an independent reference</div></div>
       <div class="res full"><div class="big"><span data-count="8">0</span> moving obstacles at 4× speed</div><div class="lbl">Zero collisions with camera-LiDAR fusion feeding live replanning</div></div>
@@ -410,7 +406,7 @@ footer{padding:26px 0 40px;color:var(--soft);font-size:.84rem}
         <p>Real-time ground-vehicle navigation, deployed as live ROS2 nodes. <a href="https://www.proquest.com/docview/3339828739" target="_blank" rel="noopener">Read the thesis</a></p>
         <ul>
           <li>A* supplies a global guide; RRT* refines a smooth path only inside an adaptive corridor around it.</li>
-          <li><span class="metric">98% vs 60%</span> success and <span class="metric">5.87% shorter paths</span> than RRT*; <span class="metric">90%+</span> at high density where RRT* fell to 40%.</li>
+          <li>Re-evaluated on 130 seeded maps (43,420 runs) with an exact collision rule: solves <span class="metric">100 vs 49 of 130</span> maps against plain RRT* at the thesis budget, but is only <span class="metric">0.4&ndash;1.2%</span> shorter than tightened Theta* at 6.5&ndash;33.7&times; the planning time. Earlier headline numbers were retracted.</li>
           <li>Kalman filter odometry fusion cut localization error by <span class="metric">44.1%</span>. Ships as a reproducible Docker demo.</li>
         </ul>
         <div class="chips"><span class="chip">C++</span><span class="chip">Python</span><span class="chip">ROS2 Jazzy</span><span class="chip">Nav2</span><span class="chip">TF2</span><span class="chip">AMCL</span><span class="chip">Gazebo</span><span class="chip">Docker</span></div>
