@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-QQLDDB9JBX"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-QQLDDB9JBX');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TrackLoop: vehicle path tracking · Md Asifuzzaman</title>
+<meta name="description" content="Four path-tracking controllers (Pure Pursuit, Stanley, LQR and linear MPC) benchmarked over 34,560 simulated runs, with stability analysis and system identification. 21 figures. Simulation only.">
+<meta property="og:title" content="TrackLoop: vehicle path tracking · Md Asifuzzaman">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://asif-ucchwas.github.io/trackloop/">
+<meta property="og:image" content="https://asif-ucchwas.github.io/trackloop/img/01_trackloop_four_controllers_at_20_m_s.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+<meta property="og:description" content="Four path-tracking controllers (Pure Pursuit, Stanley, LQR and linear MPC) benchmarked over 34,560 simulated runs, with stability analysis and system identification. 21 figures. Simulation only.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://asif-ucchwas.github.io/trackloop/img/01_trackloop_four_controllers_at_20_m_s.png">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚗</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F3F5F2; --panel:#FFFFFF; --ink:#141C25; --soft:#586472; --line:#DCE2DD;
+  --lane:#D9950F; --lane-soft:#FBEFD2; --good:#1F7A6E; --good-soft:#DDF0EC; --bad:#C2334D; --bad-soft:#F8E3E7;
+  --obs:#1D2733; --tree-a:rgba(194,51,77,.35); --tree-b:rgba(31,122,110,.38); --corr:rgba(217,149,15,.14); --grid:rgba(20,28,37,.06);
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --cond:"IBM Plex Sans Condensed","Arial Narrow",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Consolas,monospace;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+  --bg:#0C1117; --panel:#131B24; --ink:#E7EDF1; --soft:#98A6B3; --line:#223040;
+  --lane:#F2B63C; --lane-soft:#33290F; --good:#4FC2AF; --good-soft:#12302B; --bad:#EE6A80; --bad-soft:#3A1A22;
+  --obs:#2C3B4C; --tree-a:rgba(238,106,128,.38); --tree-b:rgba(79,194,175,.42); --corr:rgba(242,182,60,.12); --grid:rgba(231,237,241,.05);
+}}
+:root[data-theme="dark"]{
+  --bg:#0C1117; --panel:#131B24; --ink:#E7EDF1; --soft:#98A6B3; --line:#223040;
+  --lane:#F2B63C; --lane-soft:#33290F; --good:#4FC2AF; --good-soft:#12302B; --bad:#EE6A80; --bad-soft:#3A1A22;
+  --obs:#2C3B4C; --tree-a:rgba(238,106,128,.38); --tree-b:rgba(79,194,175,.42); --corr:rgba(242,182,60,.12); --grid:rgba(231,237,241,.05);
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16.5px;line-height:1.6}
+a{color:inherit}
+button,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--lane);outline-offset:3px;border-radius:4px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 22px}
+section{padding:64px 0}
+.eyebrow{font-size:.85rem;font-weight:600;color:var(--lane);margin:0 0 8px}
+h2{font-family:var(--cond);font-weight:700;font-size:clamp(1.9rem,4vw,2.7rem);line-height:1.05;margin:0 0 12px}
+.sub{color:var(--soft);max-width:62ch;margin:0 0 28px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto}
+.chip{font-family:var(--mono);font-size:.76rem;padding:3px 9px;border-radius:99px;background:var(--bg);border:1px solid var(--line)}
+.btn{display:inline-flex;align-items:center;gap:8px;text-decoration:none;border-radius:10px;padding:10px 16px;font-weight:600;font-size:.95rem;border:1px solid var(--line);background:var(--panel)}
+.btn.primary{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btn:hover{border-color:var(--soft)}
+.links{display:flex;flex-wrap:wrap;gap:10px}
+.top{padding:44px 0 8px}
+.back{font-size:.9rem;color:var(--soft);text-decoration:none}
+.back:hover{color:var(--ink)}
+.top h1{font-family:var(--cond);font-weight:700;font-size:clamp(2.3rem,5vw,3.6rem);line-height:1;margin:14px 0 14px}
+.lede{font-size:1.1rem;max-width:62ch;margin:0 0 20px}
+.herofig{margin:26px 0 0}
+.herofig img,.fig img{width:100%;height:auto;display:block;border-radius:12px;border:1px solid var(--line);background:#fff}
+.results{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+@media (max-width:860px){.results{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:500px){.results{grid-template-columns:1fr}}
+.res{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px}
+.res .big{font-family:var(--cond);font-weight:700;font-size:2.4rem;line-height:1;font-variant-numeric:tabular-nums}
+.res .lbl{color:var(--soft);font-size:.92rem;margin-top:6px}
+.limits{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--lane);border-radius:12px;padding:14px 18px;color:var(--soft);margin-top:16px}
+.limits b{color:var(--ink)}
+.gallery{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+@media (max-width:820px){.gallery{grid-template-columns:1fr}}
+.fig{margin:0;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px 14px 16px}
+.fig .n{font-family:var(--mono);font-size:.78rem;color:var(--lane);font-weight:500}
+.fig h3{font-family:var(--cond);font-size:1.3rem;line-height:1.15;margin:4px 0 10px}
+.fig figcaption{color:var(--soft);font-size:.93rem;margin-top:10px}
+.cta{display:flex;flex-wrap:wrap;gap:18px;align-items:center;justify-content:space-between;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:22px 24px}
+.cta h2{margin:0}
+footer{padding:24px 0 40px;color:var(--soft);font-size:.9rem}
+.crosslink a{color:var(--good);font-weight:600}
+
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="back" href="../controls/">&larr; Back to the Controls page</a>
+    <p class="eyebrow" style="margin-top:18px">Project · finished, v1.0</p>
+    <h1>TrackLoop: vehicle path tracking</h1>
+    <p class="lede">Four path-tracking controllers on a car model, benchmarked the same way as ControlLoop-RT: Pure Pursuit, Stanley, LQR and linear MPC. Every number on this page comes from a file in the repo, and a test fails if the README drifts from the data.</p>
+    <div class="links">
+      <a class="btn primary" href="https://github.com/Asif-Ucchwas/trackloop" target="_blank" rel="noopener">View the repo</a>
+      <a class="btn" href="#figures">Jump to all 20 figures</a>
+    </div>
+    <figure class="herofig">
+      <img src="img/01_trackloop_four_controllers_at_20_m_s.png" width="1200" height="627" alt="TrackLoop: four controllers at 20 m/s">
+      <figcaption class="note" style="font-size:.9rem;color:var(--soft);margin-top:10px">Mean lateral error on 12 road paths with 150 random starts and 95% intervals: LQR 0.045 m, MPC 0.054 m, Stanley 0.198 m, Pure Pursuit 0.257 m. Simulation only.</figcaption>
+    </figure>
+  </div>
+</header>
+
+<section id="results">
+  <div class="wrap">
+    <p class="eyebrow">Results</p>
+    <h2>What was measured</h2>
+    <div class="results">
+      <div class="res"><div class="big">0.045 m</div><div class="lbl">Mean lateral error of LQR at 20 m/s on 12 road paths (MPC 0.054 m, Stanley 0.198 m, Pure Pursuit 0.257 m)</div></div>
+      <div class="res"><div class="big">34,560</div><div class="lbl">Simulated runs, with every 95% confidence interval within 5% of its mean</div></div>
+      <div class="res"><div class="big">38 of 38</div><div class="lbl">Stability limits where the linear-loop analysis agreed with simulation</div></div>
+      <div class="res"><div class="big">0.2%</div><div class="lbl">Worst parameter error when the vehicle model was identified from noisy data</div></div>
+    </div>
+    <p class="limits"><b>Honest limits.</b> Simulation only, with placeholder vehicle parameters, not a real car. Pure Pursuit beats kinematic LQR and MPC in the parking family, and that open item is written up in the repo DEVLOG rather than hidden. 373 tests and CI run on every push.</p>
+  </div>
+</section>
+
+<section id="figures">
+  <div class="wrap">
+    <p class="eyebrow">Figures</p>
+    <h2>All 20 figures</h2>
+    <p class="sub">Each one has a title and a one-sentence reading of what it shows. The same images are in the repo under docs/figures.</p>
+    <div class="gallery">
+      <figure class="fig" id="fig02">
+        <span class="n">Figure 1 of 20</span>
+        <h3>TrackLoop architecture</h3>
+        <img src="img/02_trackloop_architecture.png" width="1770" height="1154" alt="TrackLoop architecture" loading="lazy">
+        <figcaption>Frozen paths, vehicle models and four controllers feed the runners and metrics, which produce the benchmark, model-error cases, linear-loop analysis and identification.</figcaption>
+      </figure>
+      <figure class="fig" id="fig03">
+        <span class="n">Figure 2 of 20</span>
+        <h3>Road benchmark: error and tire slip</h3>
+        <img src="img/03_road_benchmark_error_and_tire_slip.png" width="1950" height="572" alt="Road benchmark: error and tire slip" loading="lazy">
+        <figcaption>Four controllers, 12 road paths, 5, 10 and 20 m/s. At 20 m/s LQR and MPC have the lowest error but exceed the linear tire model&#x27;s friction range.</figcaption>
+      </figure>
+      <figure class="fig" id="fig04">
+        <span class="n">Figure 3 of 20</span>
+        <h3>Parking-family benchmark</h3>
+        <img src="img/04_parking_family_benchmark.png" width="1690" height="1040" alt="Parking-family benchmark" loading="lazy">
+        <figcaption>Four kinematic controllers on 19 frozen paths at 0.5, 1.5 and 3 m/s with 5 seeds (1,140 runs). At 3 m/s Pure Pursuit has the lowest median error on 18 of 19 paths.</figcaption>
+      </figure>
+      <figure class="fig" id="fig05">
+        <span class="n">Figure 4 of 20</span>
+        <h3>Controllers on the identified model</h3>
+        <img src="img/05_controllers_on_the_identified_model.png" width="2240" height="1120" alt="Controllers on the identified model" loading="lazy">
+        <figcaption>LQR and MPC designed on nominal, identified and true parameters, run on the true plant. The identified design matches the true one and removes the wrong-model penalty.</figcaption>
+      </figure>
+      <figure class="fig" id="fig06">
+        <span class="n">Figure 5 of 20</span>
+        <h3>Gain and phase margins against speed</h3>
+        <img src="img/06_gain_and_phase_margins_against_speed.png" width="1950" height="975" alt="Gain and phase margins against speed" loading="lazy">
+        <figcaption>Margins of the four loops against speed for steering lags of 0, 0.1 and 0.2 s. Phase margin falls with speed for every controller and lag.</figcaption>
+      </figure>
+      <figure class="fig" id="fig07">
+        <span class="n">Figure 6 of 20</span>
+        <h3>Bode plots at 10 m/s</h3>
+        <img src="img/07_bode_plots_at_10_m_s.png" width="1200" height="1050" alt="Bode plots at 10 m/s" loading="lazy">
+        <figcaption>Loop frequency response of the four controllers at 10 m/s, broken at the steering command and sampled at 0.05 s, used to read gain and phase margins.</figcaption>
+      </figure>
+      <figure class="fig" id="fig08">
+        <span class="n">Figure 7 of 20</span>
+        <h3>Stability limits checked in simulation</h3>
+        <img src="img/08_stability_limits_checked_in_simulation.png" width="1800" height="720" alt="Stability limits checked in simulation" loading="lazy">
+        <figcaption>Linear model against the nonlinear simulation near each predicted stability limit. Growth or decay matches in 38 of 38 runs.</figcaption>
+      </figure>
+      <figure class="fig" id="fig09">
+        <span class="n">Figure 8 of 20</span>
+        <h3>Linear model against nonlinear simulation</h3>
+        <img src="img/09_linear_model_against_nonlinear_simulation.png" width="1650" height="630" alt="Linear model against nonlinear simulation" loading="lazy">
+        <figcaption>Linear closed-loop models of the four controllers compared with the simulation from an offset start. They agree to about 2e-5 m at a 0.05 m offset.</figcaption>
+      </figure>
+      <figure class="fig" id="fig10">
+        <span class="n">Figure 9 of 20</span>
+        <h3>Where linearisation stops</h3>
+        <img src="img/10_where_linearisation_stops.png" width="2250" height="570" alt="Where linearisation stops" loading="lazy">
+        <figcaption>The model-simulation gap grows with start offset. Removing the 0.8 rad/s steering rate limit cuts the worst gap at 2 m from 16-161% to 0.4-2.6%.</figcaption>
+      </figure>
+      <figure class="fig" id="fig11">
+        <span class="n">Figure 10 of 20</span>
+        <h3>Least-squares identification</h3>
+        <img src="img/11_least_squares_identification.png" width="2250" height="1200" alt="Least-squares identification" loading="lazy">
+        <figcaption>Front and rear cornering stiffness and yaw inertia estimated from noisy simulated data: all within 0.2% of the true values, with predicted spread matching 100 noise seeds.</figcaption>
+      </figure>
+      <figure class="fig" id="fig12">
+        <span class="n">Figure 11 of 20</span>
+        <h3>Identification quality</h3>
+        <img src="img/12_identification_quality.png" width="2520" height="1190" alt="Identification quality" loading="lazy">
+        <figcaption>How noise, amplitude, signal length, speed, a wrong mass and steering noise change the estimates. Rear stiffness is poorly identified at low speed.</figcaption>
+      </figure>
+      <figure class="fig" id="fig13">
+        <span class="n">Figure 12 of 20</span>
+        <h3>Simulated identification data</h3>
+        <img src="img/13_simulated_identification_data.png" width="1950" height="1500" alt="Simulated identification data" loading="lazy">
+        <figcaption>Steering sweep and random steering at 15 m/s with noisy yaw rate and lateral acceleration. Simulated data only.</figcaption>
+      </figure>
+      <figure class="fig" id="fig14">
+        <span class="n">Figure 13 of 20</span>
+        <h3>LQR and MPC recovering from a 5 m offset</h3>
+        <img src="img/14_lqr_and_mpc_recovering_from_a_5_m_offset.png" width="910" height="1040" alt="LQR and MPC recovering from a 5 m offset" loading="lazy">
+        <figcaption>10 m/s with 0.6 rad and 0.8 rad/s limits. LQR overshoots; MPC includes the rate limit and does not. A 5 m offset is far outside LQR&#x27;s small-error range.</figcaption>
+      </figure>
+      <figure class="fig" id="fig15">
+        <span class="n">Figure 14 of 20</span>
+        <h3>Tracking paths with reverse gear</h3>
+        <img src="img/15_tracking_paths_with_reverse_gear.png" width="1430" height="1105" alt="Tracking paths with reverse gear" loading="lazy">
+        <figcaption>Executed paths on Reeds-Shepp paths with cusps, where the car stops and changes gear. All 36 runs finish and stop at every cusp.</figcaption>
+      </figure>
+      <figure class="fig" id="fig16">
+        <span class="n">Figure 15 of 20</span>
+        <h3>Reeds-Shepp reference paths</h3>
+        <img src="img/16_reeds_shepp_reference_paths.png" width="1430" height="1235" alt="Reeds-Shepp reference paths" loading="lazy">
+        <figcaption>Nine paths at a 5 m turning radius. Blue is forward, orange is reverse, red crosses mark the 7 cusps on the 4 paths that reverse.</figcaption>
+      </figure>
+      <figure class="fig" id="fig17">
+        <span class="n">Figure 16 of 20</span>
+        <h3>Planner paths from my thesis</h3>
+        <img src="img/17_planner_paths_from_my_thesis.png" width="1430" height="975" alt="Planner paths from my thesis" loading="lazy">
+        <figcaption>Hybrid A*-RRT* and Theta* paths with rounded corners (3 m per cell, 6 m radius) on 3 of 5 random maps. Reference paths for tracking, not planner results.</figcaption>
+      </figure>
+      <figure class="fig" id="fig18">
+        <span class="n">Figure 17 of 20</span>
+        <h3>Road family of test paths</h3>
+        <img src="img/18_road_family_of_test_paths.png" width="2080" height="975" alt="Road family of test paths" loading="lazy">
+        <figcaption>12 forward paths (curve, lateral shift, S-curve, double shift at 5, 10 and 20 m/s), each with peak lateral acceleration 2.0 m/s2 and a clothoid curvature ramp.</figcaption>
+      </figure>
+      <figure class="fig" id="fig19">
+        <span class="n">Figure 18 of 20</span>
+        <h3>Path feasibility checks</h3>
+        <img src="img/19_path_feasibility_checks.png" width="1950" height="845" alt="Path feasibility checks" loading="lazy">
+        <figcaption>Largest curvature, steering lag distance and largest drivable speed for each of the 19 paths. Only 2 of 19 pass both curvature and steering-rate checks at 1.5 m/s.</figcaption>
+      </figure>
+      <figure class="fig" id="fig20">
+        <span class="n">Figure 19 of 20</span>
+        <h3>Tracking metrics</h3>
+        <img src="img/20_tracking_metrics.png" width="1950" height="676" alt="Tracking metrics" loading="lazy">
+        <figcaption>Scores from one metric definition on the cusp runs. Stanley reverses its steering rate about 3.6 times a second, against about 0.33 for the other three.</figcaption>
+      </figure>
+      <figure class="fig" id="fig21">
+        <span class="n">Figure 20 of 20</span>
+        <h3>Model-error cases</h3>
+        <img src="img/21_model_error_cases.png" width="1950" height="1404" alt="Model-error cases" loading="lazy">
+        <figcaption>Median error against the nominal plant when mass, tire stiffness, steering lag or wheelbase differ from the design model. Case sizes are placeholders.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="cta">
+      <h2>Let's talk controls</h2>
+      <div class="links">
+        <a class="btn primary" href="mailto:asifuzzamanucchwas@gmail.com" target="_blank" rel="noopener">Email me</a>
+        <a class="btn" href="https://www.linkedin.com/in/masifuzzaman" target="_blank" rel="noopener">LinkedIn</a>
+        <a class="btn" href="https://github.com/Asif-Ucchwas/trackloop" target="_blank" rel="noopener">Repo</a>
+      </div>
+    </div>
+  </div>
+</section>
+<footer><div class="wrap">© 2026 Md Asifuzzaman · <span class="crosslink"><a href="../controls/">Controls</a> · <a href="../">Motion Planning</a> · <a href="../embedded/">Embedded</a></span></div></footer>
+</body>
+</html>

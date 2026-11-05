@@ -6,9 +6,10 @@ One page per engineering role, each backed by finished projects, measured result
 |---|---|---|
 | Motion Planning Engineer | https://asif-ucchwas.github.io/ | Four planners, including my A*-guided corridor RRT*, racing on the same map |
 | Controls Engineer | https://asif-ucchwas.github.io/controls/ | My DC servo with feedback-only and feedforward control, with a disturbance toggle |
+| Project page: TrackLoop | https://asif-ucchwas.github.io/trackloop/ | Four path-tracking controllers on a car model, with all 20 figures |
 | Embedded Validation Engineer – Safety-Critical Firmware | https://asif-ucchwas.github.io/embedded/ | Fault injection on Zephyr firmware, CAN arbitration and a J1939 frame encoder |
 
-Each page also lists the project I'm building now and the gaps I'm closing next.
+Each page also lists my latest project and the gaps I'm closing next.
 
 ## Free handbook
 

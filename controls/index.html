@@ -297,6 +297,9 @@ footer{padding:26px 0 40px;color:var(--soft);font-size:.84rem}
 .live-tag{display:inline-flex;align-items:center;gap:7px;font-size:.78rem;font-weight:600;padding:3px 10px;border-radius:99px;background:var(--lane-soft);color:var(--lane)}
 .live-tag::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--lane);animation:pulse 1.6s ease-in-out infinite}
 @keyframes pulse{50%{opacity:.25}}
+.live-tag.done{background:var(--good-soft);color:var(--good)}
+.live-tag.done::before{background:var(--good);animation:none}
+.ongoing .links{margin-top:6px}
 @media (prefers-reduced-motion:reduce){.live-tag::before{animation:none}}
 .ongoing > p{color:var(--soft);margin:0 0 16px;max-width:70ch}
 .plan{list-style:none;margin:0 0 16px;padding:0;display:grid;grid-template-columns:repeat(2,1fr);gap:10px 18px;counter-reset:st}
@@ -425,6 +428,13 @@ footer{padding:26px 0 40px;color:var(--soft);font-size:.84rem}
         <div class="chips"><span class="chip">Python</span><span class="chip">C</span><span class="chip">Zephyr RTOS</span><span class="chip">do-mpc</span><span class="chip">CasADi</span><span class="chip">python-control</span><span class="chip">pytest</span></div>
       </article>
       <article class="proj">
+        <h3>TrackLoop: vehicle path tracking</h3>
+        <p>Pure Pursuit, Stanley, LQR and linear MPC on a car model. <a href="../trackloop/">See all 20 figures</a> · <a href="https://github.com/Asif-Ucchwas/trackloop" target="_blank" rel="noopener">View the repo</a></p>
+        <ul><li>At 20 m/s on 12 road paths: LQR <span class="metric">0.045 m</span> and MPC <span class="metric">0.054 m</span> mean lateral error, against 0.198 m for Stanley and 0.257 m for Pure Pursuit.</li>
+        <li><span class="metric">34,560 runs</span> with 95% intervals, stability limits matched in <span class="metric">38 of 38</span> cases, 373 tests and CI. Simulation only.</li></ul>
+        <div class="chips"><span class="chip">Python</span><span class="chip">OSQP</span><span class="chip">LQR</span><span class="chip">MPC</span><span class="chip">pytest</span><span class="chip">GitHub Actions</span></div>
+      </article>
+      <article class="proj">
         <h3>Kalman filter localization</h3>
         <p>State estimation inside my thesis navigation stack. <a href="https://www.proquest.com/docview/3339828739" target="_blank" rel="noopener">Read the thesis</a></p>
         <ul><li><span class="metric">44.1% lower localization error</span> from Kalman filter fusion of odometry.</li>
@@ -456,21 +466,22 @@ footer{padding:26px 0 40px;color:var(--soft);font-size:.84rem}
 
 <section id="ongoing">
   <div class="wrap">
-    <p class="eyebrow">Ongoing</p>
-    <h2>What I'm building now</h2>
+    <p class="eyebrow">Latest project</p>
+    <h2>What I built most recently</h2>
     <p class="sub">Connecting my controls work to my motion planning work: the paths my planners produce, followed by a real controller.</p>
     <div class="ongoing">
-      <div class="ongoing-head"><h3>TrackLoop: vehicle path tracking</h3><span class="live-tag">In progress</span></div>
+      <div class="ongoing-head"><h3>TrackLoop: vehicle path tracking</h3><span class="live-tag done">Finished · v1.0</span></div>
       <p>Four path-tracking controllers on a car model, following paths from my own Hybrid A*–RRT* and Reeds-Shepp planners, benchmarked the same way as ControlLoop-RT.</p>
       <ol class="plan">
         <li><b>Vehicle models</b><span>Kinematic and dynamic bicycle models of a car</span></li>
         <li><b>Four controllers</b><span>Pure Pursuit, Stanley, LQR and linear MPC</span></li>
         <li><b>Paths from my planners</b><span>Hybrid A*–RRT* and Reeds-Shepp paths as the references to follow</span></li>
-        <li><b>Benchmark</b><span>Lateral and heading error, steering effort and smoothness, at three speeds, with and without model errors</span></li>
-        <li><b>Stability analysis</b><span>Bode plots and gain and phase margins, and where each controller goes unstable as speed rises</span></li>
-        <li><b>System identification</b><span>Estimate the vehicle model from noisy data, then re-test the controllers on it</span></li>
+        <li><b>Benchmark</b><span>34,560 runs; at 20 m/s LQR 0.045 m, MPC 0.054 m, Stanley 0.198 m, Pure Pursuit 0.257 m</span></li>
+        <li><b>Stability analysis</b><span>Stability limits matched simulation in 38 of 38 cases; phase margins of 33, 37, 54 and 60 degrees at 10 m/s with 0.1 s lag</span></li>
+        <li><b>System identification</b><span>Parameters recovered within 0.2%; the combined-error case improved after redesigning on the identified model</span></li>
       </ol>
-      <p class="note">No results yet. Numbers will appear here as each stage is measured, with a full DEVLOG in the repo.</p>
+      <p class="note">Simulation only, with placeholder vehicle parameters. Open items are listed in the repo DEVLOG.</p>
+      <div class="links"><a class="btn primary" href="../trackloop/">See all 20 figures</a><a class="btn" href="https://github.com/Asif-Ucchwas/trackloop" target="_blank" rel="noopener">View the repo</a></div>
     </div>
   </div>
 </section>
@@ -481,11 +492,8 @@ footer{padding:26px 0 40px;color:var(--soft);font-size:.84rem}
     <h2>What I'll build next</h2>
     <p class="sub">The gaps I've found between my work so far and a production controls role, and the order I'm closing them in.</p>
     <div class="road">
-      <div class="step"><span class="tagn">Up next</span><h3>Frequency-domain analysis</h3><p class="locked">Not open to the public yet</p></div>
-      <div class="step"><span class="tagn">Up next</span><h3>System identification</h3><p class="locked">Not open to the public yet</p></div>
       <div class="step"><span class="tagn">Up next</span><h3>MATLAB and Simulink</h3><p class="locked">Not open to the public yet</p></div>
       <div class="step"><span class="tagn">Up next</span><h3>Discrete-time design</h3><p class="locked">Not open to the public yet</p></div>
-      <div class="step"><span class="tagn">Up next</span><h3>LQR and optimal control</h3><p class="locked">Not open to the public yet</p></div>
       <div class="step"><span class="tagn">Up next</span><h3>Robust MPC</h3><p class="locked">Not open to the public yet</p></div>
       <div class="step"><span class="tagn">Up next</span><h3>Observers in the loop</h3><p class="locked">Not open to the public yet</p></div>
       <div class="step"><span class="tagn">Up next</span><h3>Closed-loop control on my robot car</h3><p class="locked">Not open to the public yet</p></div>
