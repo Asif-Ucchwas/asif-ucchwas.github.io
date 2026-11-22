@@ -13,7 +13,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Why You Consider Me As An Embedded Validation Engineer – Safety-Critical Firmware · Md Asifuzzaman</title>
-<meta name="description" content="Embedded validation engineer: fault injection on safety-critical Zephyr firmware (200 of 200 caught), a J1939 CAN stack, 64 unit tests with CI, and HIL-Bench in progress.">
+<meta name="description" content="Embedded validation engineer: fault injection on safety-critical Zephyr firmware (200 of 200 caught), a J1939 CAN stack, raw Ethernet tested by Jenkins over a real cable, and HIL-Bench in progress.">
 <meta property="og:title" content="Why You Consider Me As An Embedded Validation Engineer – Safety-Critical Firmware · Md Asifuzzaman">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://asif-ucchwas.github.io/embedded/">
@@ -23,7 +23,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://asif-ucchwas.github.io/embedded/preview.jpg?v=2">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔌</text></svg>">
-<meta property="og:description" content="Embedded validation engineer: fault injection on safety-critical Zephyr firmware, a J1939 CAN stack, 64 unit tests with CI, and HIL-Bench in progress.">
+<meta property="og:description" content="Embedded validation engineer: fault injection on safety-critical Zephyr firmware, a J1939 CAN stack, raw Ethernet tested by Jenkins over a real cable, and HIL-Bench in progress.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Playfair+Display:wght@700;900&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -388,6 +388,8 @@ footer{padding:26px 0 40px;color:var(--soft);font-size:.84rem}
 .plan li.done::before{content:"\2713";background:var(--good);border-color:var(--good);color:#fff}
 .ongoing code{font-family:var(--mono,monospace);font-size:.88em}
 .ongoing > p a{color:var(--good);font-weight:600}
+.live-tag.done{background:var(--good-soft);color:var(--good)}
+.live-tag.done::before{background:var(--good);animation:none}
 </style>
 </head>
 <body>
@@ -562,9 +564,9 @@ footer{padding:26px 0 40px;color:var(--soft);font-size:.84rem}
     <p class="eyebrow">Stack</p>
     <h2>Tools I build with</h2>
     <div class="stack">
-      <div class="stk"><h3>Protocols</h3><div class="chips"><span class="chip">CAN</span><span class="chip">SocketCAN</span><span class="chip">J1939</span><span class="chip">DBC</span><span class="chip">TCP / UDP</span><span class="chip">Serial</span></div></div>
-      <div class="stk"><h3>Embedded and RTOS</h3><div class="chips"><span class="chip">C</span><span class="chip">Zephyr RTOS</span><span class="chip">native_sim</span><span class="chip">QEMU Cortex-M3</span><span class="chip">ESP8266</span><span class="chip">Arduino</span></div></div>
-      <div class="stk"><h3>Tooling and testing</h3><div class="chips"><span class="chip">python-can</span><span class="chip">cantools</span><span class="chip">can-utils</span><span class="chip">Docker</span><span class="chip">pytest</span><span class="chip">gtest</span><span class="chip">gcov / lcov</span><span class="chip">CMake</span><span class="chip">SCons</span><span class="chip">Git</span><span class="chip">GitHub Actions</span></div></div>
+      <div class="stk"><h3>Protocols</h3><div class="chips"><span class="chip">CAN</span><span class="chip">SocketCAN</span><span class="chip">J1939</span><span class="chip">DBC</span><span class="chip">TCP / UDP</span><span class="chip">Raw Ethernet (AF_PACKET)</span><span class="chip">Serial</span></div></div>
+      <div class="stk"><h3>Embedded and RTOS</h3><div class="chips"><span class="chip">C</span><span class="chip">Zephyr RTOS</span><span class="chip">native_sim</span><span class="chip">QEMU Cortex-M3</span><span class="chip">Jetson Nano</span><span class="chip">ESP8266</span><span class="chip">Arduino</span></div></div>
+      <div class="stk"><h3>Tooling and testing</h3><div class="chips"><span class="chip">python-can</span><span class="chip">cantools</span><span class="chip">can-utils</span><span class="chip">Docker</span><span class="chip">pytest</span><span class="chip">gtest</span><span class="chip">gcov / lcov</span><span class="chip">CMake</span><span class="chip">SCons</span><span class="chip">Git</span><span class="chip">GitHub Actions</span><span class="chip">Jenkins</span><span class="chip">tcpdump</span></div></div>
     </div>
   </div>
 </section>
@@ -573,10 +575,10 @@ footer{padding:26px 0 40px;color:var(--soft);font-size:.84rem}
   <div class="wrap">
     <p class="eyebrow">Ongoing</p>
     <h2>What I'm building now</h2>
-    <p class="sub">Three builds that move my work from simulation toward real hardware and automated, repeatable testing. Each shows exactly what is finished and what is still a plan.</p>
+    <p class="sub">Builds that move my work from simulation toward real hardware and automated, repeatable testing. Each shows exactly what is finished and what is still a plan.</p>
 
     <div class="ongoing">
-      <div class="ongoing-head"><h3>HIL-Bench: sim-to-real gap in fault-injection testing</h3><span class="live-tag">In progress · Stage 1 of 9 complete</span></div>
+      <div class="ongoing-head"><h3>HIL-Bench: sim-to-real gap in fault-injection testing</h3><span class="live-tag">In progress · Stage 1 complete</span></div>
       <p>One control firmware and one test protocol, run in simulation, on a low-cost hardware-in-the-loop rig and on a real robot car, to measure whether a fault-injection result from simulation holds on real hardware. <a href="https://github.com/Asif-Ucchwas/hil-bench" target="_blank" rel="noopener">View the repo</a></p>
       <ol class="plan">
         <li class="done"><b>Literature review, fault taxonomy, test protocol</b><span>Done: a three-tier taxonomy (software-observable, sim-representable, hardware-only) and one protocol every setup follows</span></li>
@@ -590,15 +592,15 @@ footer{padding:26px 0 40px;color:var(--soft);font-size:.84rem}
     </div>
 
     <div class="ongoing">
-      <div class="ongoing-head"><h3>WireLink-CI: raw Ethernet framing, SCons and Jenkins CI</h3><span class="live-tag">In progress · Stage 1 of 4 complete</span></div>
-      <p>A custom Layer-2 Ethernet frame in C, sent over a real cable to a Raspberry Pi and tested by a Jenkins pipeline that has to turn red when I break it on purpose. <a href="https://github.com/Asif-Ucchwas/wirelink-ci" target="_blank" rel="noopener">View the repo</a></p>
+      <div class="ongoing-head"><h3>WireLink-CI: raw Ethernet framing, SCons and Jenkins CI</h3><span class="live-tag done">Finished · all 4 stages</span></div>
+      <p>A custom Layer-2 Ethernet frame in C, sent from a Linux PC over a real cable to a Jetson Nano, and tested by a Jenkins pipeline that turned red when I broke it on purpose. <a href="https://github.com/Asif-Ucchwas/wirelink-ci" target="_blank" rel="noopener">View the repo</a></p>
       <ol class="plan">
-        <li class="done"><b>SCons build and frame library</b><span>Done: own EtherType (0x88B5), hand-written CRC-32, 129 unit checks, green <code>scons -Q test</code></span></li>
-        <li><b>Physical link to a Raspberry Pi</b><span>Raw sockets, six pytest link tests, a tcpdump capture and an unplug test</span></li>
-        <li><b>Jenkins pipeline</b><span>Build, deploy to the Pi, run the link tests; green, then red on an injected defect, then green again</span></li>
-        <li><b>Write-up and ship</b><span>README with diagram, screenshots and the capture file</span></li>
+        <li class="done"><b>SCons build and frame library</b><span>Own EtherType (0x88B5), hand-written CRC-32, 129 unit checks; strict gcc flags on x86-64 and on the Jetson (aarch64)</span></li>
+        <li class="done"><b>Physical link to a Jetson Nano</b><span>Raw sockets, six pytest link tests passing over the cable, and a tcpdump capture of the frames</span></li>
+        <li class="done"><b>Jenkins pipeline</b><span>Build, unit tests, update the receiver on the Jetson, link tests. Green, then red when I changed one digit of the CRC polynomial, then green again</span></li>
+        <li class="done"><b>Unplug test and write-up</b><span>60,000 frames with the cable pulled and replugged: 11,919 lost frames counted exactly as one gap, 0 CRC errors, 0 duplicates</span></li>
       </ol>
-      <p class="note">Plain Ethernet with a custom EtherType, not Automotive Ethernet. It uses its own CRC-32 because the network card already handles the real Ethernet checksum. Jenkins is local and single-node, on a lab bench, not production.</p>
+      <p class="note">Plain Ethernet with a custom EtherType, not Automotive Ethernet, and not a standard protocol stack. It uses its own CRC-32 because the network card already handles the real Ethernet checksum. One cable on a lab bench; Jenkins is local and single-node, not production.</p>
     </div>
 
     <div class="ongoing">
