@@ -390,6 +390,11 @@ footer{padding:26px 0 40px;color:var(--soft);font-size:.84rem}
 .ongoing > p a{color:var(--good);font-weight:600}
 .live-tag.done{background:var(--good-soft);color:var(--good)}
 .live-tag.done::before{background:var(--good);animation:none}
+.shot{margin:2px 0 12px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff}
+.shot a{display:block}
+.shot img{display:block;width:100%;height:auto;max-height:280px;object-fit:contain}
+.proj.lead .shot img{max-height:380px}
+.shot figcaption{font-size:.8rem;line-height:1.4;color:var(--soft);padding:7px 10px;background:var(--panel);border-top:1px solid var(--line)}
 </style>
 </head>
 <body>
@@ -506,6 +511,7 @@ footer{padding:26px 0 40px;color:var(--soft);font-size:.84rem}
       </article>
       <article class="proj">
         <h3>CAN-Net: embedded networking and a J1939 stack</h3>
+        <figure class="shot"><a href="img/can-net-latency.png" target="_blank" rel="noopener"><img src="img/can-net-latency.png" alt="Average latency of CAN, UDP and TCP across load settings" loading="lazy"></a><figcaption>Average latency, CAN vs UDP vs TCP, across publisher counts and rates (virtual CAN bus).</figcaption></figure>
         <p>A from-scratch vehicle networking stack, from transport basics to an RTOS on the bus. <a href="https://github.com/Asif-Ucchwas/can-net" target="_blank" rel="noopener">View the repo</a></p>
         <ul>
           <li>SocketCAN with kernel-level ID filtering, DBC encoding and decoding with cantools, and documented bus contention between three nodes.</li>
@@ -536,6 +542,7 @@ footer{padding:26px 0 40px;color:var(--soft);font-size:.84rem}
       </article>
       <article class="proj">
         <h3>TelemOps: CAN telemetry pipeline</h3>
+        <figure class="shot"><a href="img/telemops-dashboard.png" target="_blank" rel="noopener"><img src="img/telemops-dashboard.png" alt="Grafana dashboard showing vehicle speed and engine RPM" loading="lazy"></a><figcaption>Live Grafana dashboard on telemetry ingested through the pipeline.</figcaption></figure>
         <p>From CAN frames to live dashboards. <a href="https://github.com/Asif-Ucchwas/telemops" target="_blank" rel="noopener">View the repo</a></p>
         <ul><li>DBC-encoded signals over SocketCAN, decoded and batched into Postgres, shown in Grafana with alerts.</li>
         <li><span class="metric">Zero loss up to 5,195 frames/s</span>; the ceiling traced to the ingestor's receive loop. Docker, Kubernetes and Terraform.</li></ul>
@@ -594,6 +601,7 @@ footer{padding:26px 0 40px;color:var(--soft);font-size:.84rem}
     <div class="ongoing">
       <div class="ongoing-head"><h3>WireLink-CI: raw Ethernet framing, SCons and Jenkins CI</h3><span class="live-tag done">Finished · all 4 stages</span></div>
       <p>A custom Layer-2 Ethernet frame in C, sent from a Linux PC over a real cable to a Jetson Nano, and tested by a Jenkins pipeline that turned red when I broke it on purpose. <a href="https://github.com/Asif-Ucchwas/wirelink-ci" target="_blank" rel="noopener">View the repo</a></p>
+      <figure class="shot"><a href="img/wirelink-jenkins-runs.png" target="_blank" rel="noopener"><img src="img/wirelink-jenkins-runs.png" alt="Jenkins stage view: run 1 green, run 2 red at unit tests, run 3 green" loading="lazy"></a><figcaption>Jenkins runs: #1 green; #2 red at Unit tests after I changed the CRC polynomial, later stages skipped; #3 green after the revert.</figcaption></figure>
       <ol class="plan">
         <li class="done"><b>SCons build and frame library</b><span>Own EtherType (0x88B5), hand-written CRC-32, 129 unit checks; strict gcc flags on x86-64 and on the Jetson (aarch64)</span></li>
         <li class="done"><b>Physical link to a Jetson Nano</b><span>Raw sockets, six pytest link tests passing over the cable, and a tcpdump capture of the frames</span></li>

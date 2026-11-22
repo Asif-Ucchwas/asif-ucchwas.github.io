@@ -305,6 +305,11 @@ footer{padding:26px 0 40px;color:var(--soft);font-size:.84rem}
 .plan b{display:block;line-height:1.3}
 .plan span{color:var(--soft);font-size:.9rem}
 .ongoing .note{margin-top:4px}
+.shot{margin:2px 0 12px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff}
+.shot a{display:block}
+.shot img{display:block;width:100%;height:auto;max-height:280px;object-fit:contain}
+.proj.lead .shot img{max-height:380px}
+.shot figcaption{font-size:.8rem;line-height:1.4;color:var(--soft);padding:7px 10px;background:var(--panel);border-top:1px solid var(--line)}
 </style>
 </head>
 <body>
@@ -424,6 +429,7 @@ footer{padding:26px 0 40px;color:var(--soft);font-size:.84rem}
     <div class="projects">
       <article class="proj lead">
         <h3>A*-guided adaptive-corridor RRT* with Kalman filter localization</h3>
+        <figure class="shot"><a href="img/planner-one-map.png" target="_blank" rel="noopener"><img src="img/planner-one-map.png" alt="One 50 by 50 map solved by three planners, with the exact shortest path dashed" loading="lazy"></a><figcaption>One 50&times;50 map, exact collision rule: A* + shortcut (left), Theta* + tighten (middle), my Hybrid + tighten (right). Dashed line: the exact shortest path.</figcaption></figure>
         <p>Real-time ground-vehicle navigation, deployed as live ROS2 nodes. <a href="https://www.proquest.com/docview/3339828739" target="_blank" rel="noopener">Read the thesis</a></p>
         <ul>
           <li>A* supplies a global guide; RRT* refines a smooth path only inside an adaptive corridor around it.</li>
@@ -435,6 +441,7 @@ footer{padding:26px 0 40px;color:var(--soft);font-size:.84rem}
       </article>
       <article class="proj">
         <h3>Percept-Nav</h3>
+        <figure class="shot"><a href="img/percept-nav-slam-map.png" target="_blank" rel="noopener"><img src="img/percept-nav-slam-map.png" alt="Occupancy map built with SLAM Toolbox" loading="lazy"></a><figcaption>Occupancy map built live with SLAM Toolbox (TurtleBot3, Gazebo Harmonic).</figcaption></figure>
         <p>Multi-sensor perception feeding real-time replanning.</p>
         <ul><li>OpenCV detection fused with LiDAR, time-synchronized, written into a custom C++ Nav2 costmap plugin.</li>
         <li><span class="metric">8 moving obstacles at 4× speed, zero collisions</span>; gtest against a real Nav2 layered costmap.</li></ul>
@@ -449,6 +456,7 @@ footer{padding:26px 0 40px;color:var(--soft);font-size:.84rem}
       </article>
       <article class="proj">
         <h3>Martian Autonomy</h3>
+        <figure class="shot"><a href="img/martian-route-map.jpg" target="_blank" rel="noopener"><img src="img/martian-route-map.jpg" alt="Habitat 1 road route across Mars on NASA terrain" loading="lazy"></a><figcaption>Habitat 1 route: 9 sites, 18,499 km of road, routed on NASA MOLA terrain.</figcaption></figure>
         <p>NASA Space Apps 2026: a survival map that routes a two-person crew to every Mars landing site by road. <a href="https://asif-ucchwas.github.io/martian_autonomy/" target="_blank" rel="noopener">Open the app</a> · <a href="https://github.com/Asif-Ucchwas/martian_autonomy" target="_blank" rel="noopener">View the repo</a></p>
         <ul><li>Two-pass routing on NASA MOLA terrain: A* on a 5.2 km grid, then Dijkstra on the 463 m elevation model with slopes over 12° blocked.</li>
         <li><span class="metric">41,523 km</span> of road for two habitats, planned sol by sol with camps and supply depots. Hackathon build with AI-assisted code.</li></ul>
@@ -478,6 +486,7 @@ footer{padding:26px 0 40px;color:var(--soft);font-size:.84rem}
     <div class="ongoing">
       <div class="ongoing-head"><h3>Rover + ROSPug: footprint-aware delivery planning</h3><span class="live-tag">In progress · simulation</span></div>
       <p>An autonomous snack delivery system for the Electrical Engineering building at Lamar University. A Rover Robotics MEGA drives the corridors with a planner that knows its true rectangular shape, and a ROSPug robot dog delivers to the offices the rover cannot enter. <a href="https://github.com/Asif-Ucchwas/rover-rospug" target="_blank" rel="noopener">View the repo</a></p>
+      <figure class="shot"><a href="img/rover-corridor-paths.png" target="_blank" rel="noopener"><img src="img/rover-corridor-paths.png" alt="Corridor world with the SE(2) lattice path to an office" loading="lazy"></a><figcaption>Simulation with placeholder corridor dimensions, from the first footprint estimate (1.10 &times; 0.77 m). The circle-inflated planner finds no path; my SE(2) planner (green) gets through.</figcaption></figure>
       <ol class="plan">
         <li class="done"><b>Exact collision checking</b><span>The 1.12 &times; 0.81 m rectangle checked along every move: 10,000 random poses against brute force, 0 missed collisions</span></li>
         <li class="done"><b>SE(2) lattice planner in C++</b><span>Forward, reverse and turning in place: 51 of 56 reachable corridor trips (91%), every path collision-free on the true footprint</span></li>

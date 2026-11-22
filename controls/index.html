@@ -323,6 +323,11 @@ footer{padding:26px 0 40px;color:var(--soft);font-size:.84rem}
 .sub-frame{display:block;width:100%;height:320px;border:0;border-radius:12px;background:#fff;color-scheme:light}
 @media (max-width:760px){.sub-card{grid-template-columns:1fr;padding:18px}}
 
+.shot{margin:2px 0 12px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff}
+.shot a{display:block}
+.shot img{display:block;width:100%;height:auto;max-height:280px;object-fit:contain}
+.proj.lead .shot img{max-height:380px}
+.shot figcaption{font-size:.8rem;line-height:1.4;color:var(--soft);padding:7px 10px;background:var(--panel);border-top:1px solid var(--line)}
 </style>
 </head>
 <body>
@@ -418,6 +423,7 @@ footer{padding:26px 0 40px;color:var(--soft);font-size:.84rem}
     <div class="projects">
       <article class="proj lead">
         <h3>ControlLoop-RT: MPC, feedforward and real-time safety</h3>
+        <figure class="shot"><a href="img/controlloop-rms-error.png" target="_blank" rel="noopener"><img src="img/controlloop-rms-error.png" alt="RMS tracking error of PID, PD plus feedforward and MPC" loading="lazy"></a><figcaption>RMS tracking error, 50 trials per case (600 in total), with and without disturbance and noise.</figcaption></figure>
         <p>One DC servo plant taken from first principles to a real-time, fault-tolerant control loop. <a href="https://github.com/Asif-Ucchwas/controlloop-rt" target="_blank" rel="noopener">View the repo</a></p>
         <ul>
           <li>PID diagnosed as unstable, replaced by pole-placed PD: <span class="metric">6.06% overshoot, 0.447 s settling</span>. Feedforward cut tracking error by <span class="metric">87.4%</span>.</li>
@@ -429,6 +435,7 @@ footer{padding:26px 0 40px;color:var(--soft);font-size:.84rem}
       </article>
       <article class="proj">
         <h3>TrackLoop: vehicle path tracking</h3>
+        <figure class="shot"><a href="../trackloop/img/01_trackloop_four_controllers_at_20_m_s.png" target="_blank" rel="noopener"><img src="../trackloop/img/01_trackloop_four_controllers_at_20_m_s.png" alt="Mean lateral error of four path-tracking controllers at 20 m/s" loading="lazy"></a><figcaption>12 road paths &times; 150 random starts at 20 m/s, 95% intervals. Simulation, placeholder vehicle.</figcaption></figure>
         <p>Pure Pursuit, Stanley, LQR and linear MPC on a car model. <a href="../trackloop/">See all 20 figures</a> · <a href="https://github.com/Asif-Ucchwas/trackloop" target="_blank" rel="noopener">View the repo</a></p>
         <ul><li>At 20 m/s on 12 road paths: LQR <span class="metric">0.045 m</span> and MPC <span class="metric">0.054 m</span> mean lateral error, against 0.198 m for Stanley and 0.257 m for Pure Pursuit.</li>
         <li><span class="metric">34,560 runs</span> with 95% intervals, stability limits matched in <span class="metric">38 of 38</span> cases, 373 tests and CI. Simulation only.</li></ul>
