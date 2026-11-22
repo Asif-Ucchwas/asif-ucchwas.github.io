@@ -180,6 +180,8 @@ footer{padding:26px 0 40px;color:var(--soft);font-size:.84rem}
 .step h3{margin:6px 0 6px;font-size:1.05rem}
 .step p{margin:0;color:var(--soft);font-size:.93rem}
 .step p.locked{font-style:italic}
+.step p a{color:var(--good);font-weight:600}
+.step.started{grid-column:1/-1;border-style:solid;border-color:var(--lane)}
 .tagn{font-size:.75rem;font-weight:600;padding:2px 9px;border-radius:99px;background:var(--lane-soft);color:var(--lane)}
 .cta a.mail{color:var(--lane);font-weight:600;word-break:break-all}
 @media (min-width:861px){.hero-grid{grid-template-columns:1.15fr .85fr;align-items:center}}
@@ -497,13 +499,13 @@ footer{padding:26px 0 40px;color:var(--soft);font-size:.84rem}
     <h2>What I'm building next</h2>
     <p class="sub">Taking the same planning and testing discipline from robots to public roads.</p>
     <div class="road">
+      <div class="step started"><span class="tagn">Started</span><h3>ImagineDrive: learning-based driving planner</h3><p>A policy proposes trajectories, a world model imagines their outcomes, and an uncertainty gate rejects plans it does not trust. Stage 1 done: training basics (mixed precision, two-process distributed training, checkpoints and restarts). <a href="https://github.com/Asif-Ucchwas/imaginedrive" target="_blank" rel="noopener">View the repo</a></p></div>
       <div class="step"><span class="tagn">Up next</span><h3>Frenet-frame trajectory planner</h3><p class="locked">Not open to the public yet</p></div>
       <div class="step"><span class="tagn">Up next</span><h3>Hybrid A* for car-like vehicles</h3><p class="locked">Not open to the public yet</p></div>
       <div class="step"><span class="tagn">Up next</span><h3>PRM in the benchmark</h3><p class="locked">Not open to the public yet</p></div>
       <div class="step"><span class="tagn">Up next</span><h3>Prediction-aware planning</h3><p class="locked">Not open to the public yet</p></div>
       <div class="step"><span class="tagn">Up next</span><h3>Closed-loop simulation with CARLA</h3><p class="locked">Not open to the public yet</p></div>
       <div class="step"><span class="tagn">Up next</span><h3>Machine learning for perception</h3><p class="locked">Not open to the public yet</p></div>
-      <div class="step"><span class="tagn">Up next</span><h3>Learning-based motion planning</h3><p class="locked">Not open to the public yet</p></div>
       <div class="step"><span class="tagn">Up next</span><h3>GPU acceleration with CUDA</h3><p class="locked">Not open to the public yet</p></div>
       <div class="step"><span class="tagn">Up next</span><h3>Real-time planning loops</h3><p class="locked">Not open to the public yet</p></div>
       <div class="step"><span class="tagn">Up next</span><h3>Full-stack autonomy with Autoware</h3><p class="locked">Not open to the public yet</p></div>
