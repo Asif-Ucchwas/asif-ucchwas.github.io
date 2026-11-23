@@ -146,6 +146,7 @@ h2{font-family:var(--cond);font-weight:700;font-size:clamp(1.9rem,4vw,2.7rem);li
 @media (max-width:860px){.stack{grid-template-columns:1fr}}
 .stk{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px 18px}
 .stk h3{margin:0 0 10px;font-size:1rem}
+.stk.wide{grid-column:1/-1}
 
 /* timeline / pubs */
 .two{display:grid;grid-template-columns:1fr 1fr;gap:24px}
@@ -482,7 +483,8 @@ footer{padding:26px 0 40px;color:var(--soft);font-size:.84rem}
     <div class="stack">
       <div class="stk"><h3>Planning and behavior</h3><div class="chips"><span class="chip">A*</span><span class="chip">RRT / RRT*</span><span class="chip">Dubins</span><span class="chip">Reeds-Shepp</span><span class="chip">py_trees</span></div></div>
       <div class="stk"><h3>Perception and estimation</h3><div class="chips"><span class="chip">Camera-LiDAR fusion</span><span class="chip">OpenCV</span><span class="chip">Kalman / EKF</span><span class="chip">SLAM Toolbox</span><span class="chip">AMCL</span></div></div>
-      <div class="stk"><h3>Robotics and testing</h3><div class="chips"><span class="chip">C++</span><span class="chip">Python</span><span class="chip">ROS2 Jazzy</span><span class="chip">Nav2</span><span class="chip">Gazebo</span><span class="chip">Isaac Lab</span><span class="chip">gtest</span><span class="chip">pytest</span><span class="chip">GitHub Actions</span></div></div>
+      <div class="stk"><h3>Robotics and testing</h3><div class="chips"><span class="chip">C++</span><span class="chip">Python</span><span class="chip">ROS2 Jazzy</span><span class="chip">Nav2</span><span class="chip">Gazebo</span><span class="chip">gtest</span><span class="chip">pytest</span><span class="chip">GitHub Actions</span></div></div>
+      <div class="stk wide"><h3>Machine learning and GPU training</h3><div class="chips"><span class="chip">Isaac Lab</span><span class="chip">Isaac Sim</span><span class="chip">PPO (RSL-RL)</span><span class="chip">PyTorch + CUDA</span><span class="chip">Newton / MuJoCo-Warp physics</span><span class="chip">TensorBoard</span><span class="chip">nvidia-smi GPU logging</span><span class="chip">Seeded sweeps</span><span class="chip">NumPy</span><span class="chip">Matplotlib</span><span class="chip">U-Net</span><span class="chip">Mixed precision (bf16)</span><span class="chip">DistributedDataParallel</span></div></div>
     </div>
   </div>
 </section>
