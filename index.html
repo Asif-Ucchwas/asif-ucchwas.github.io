@@ -309,6 +309,7 @@ footer{padding:26px 0 40px;color:var(--soft);font-size:.84rem}
 .shot a{display:block}
 .shot img{display:block;width:100%;height:auto;max-height:280px;object-fit:contain}
 .proj.lead .shot img{max-height:380px}
+.shot video{display:block;width:100%;height:auto;background:#000}
 .shot figcaption{font-size:.8rem;line-height:1.4;color:var(--soft);padding:7px 10px;background:var(--panel);border-top:1px solid var(--line)}
 </style>
 </head>
@@ -462,6 +463,14 @@ footer{padding:26px 0 40px;color:var(--soft);font-size:.84rem}
         <li><span class="metric">41,523 km</span> of road for two habitats, planned sol by sol with camps and supply depots. Hackathon build with AI-assisted code.</li></ul>
         <div class="chips"><span class="chip">Python</span><span class="chip">A*</span><span class="chip">Dijkstra</span><span class="chip">Held-Karp</span><span class="chip">Leaflet</span></div>
       </article>
+      <article class="proj">
+        <h3>Isaac Lab scaling benchmark</h3>
+        <figure class="shot"><video class="clip" src="img/isaaclab-anymal-d.mp4" poster="img/isaaclab-anymal-d-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="ANYmal-D quadrupeds walking on stairs, box grids and slopes in Isaac Lab"></video><figcaption>ANYmal-D policy trained in 20 minutes with 8,192 parallel robots, following random velocity commands on rough terrain.</figcaption></figure>
+        <p>How many parallel robots should you train with on one RTX 5080? Rough-terrain quadruped locomotion with PPO. <a href="https://github.com/Asif-Ucchwas/isaaclab-scaling-benchmark" target="_blank" rel="noopener">View the repo</a></p>
+        <ul><li><span class="metric">18 runs</span>: 512 to 16,384 parallel robots &times; 3 seeds, each with the same 20-minute budget.</li>
+        <li>Sweet spot <span class="metric">8,192 robots</span>: hardest terrain reached (level 6.05), 94% tracking success. The highest reward, at 16,384, reached only level 4.0, so reward alone was misleading.</li></ul>
+        <div class="chips"><span class="chip">Isaac Lab</span><span class="chip">PPO (RSL-RL)</span><span class="chip">PyTorch</span><span class="chip">RTX 5080</span></div>
+      </article>
     </div>
   </div>
 </section>
@@ -473,7 +482,7 @@ footer{padding:26px 0 40px;color:var(--soft);font-size:.84rem}
     <div class="stack">
       <div class="stk"><h3>Planning and behavior</h3><div class="chips"><span class="chip">A*</span><span class="chip">RRT / RRT*</span><span class="chip">Dubins</span><span class="chip">Reeds-Shepp</span><span class="chip">py_trees</span></div></div>
       <div class="stk"><h3>Perception and estimation</h3><div class="chips"><span class="chip">Camera-LiDAR fusion</span><span class="chip">OpenCV</span><span class="chip">Kalman / EKF</span><span class="chip">SLAM Toolbox</span><span class="chip">AMCL</span></div></div>
-      <div class="stk"><h3>Robotics and testing</h3><div class="chips"><span class="chip">C++</span><span class="chip">Python</span><span class="chip">ROS2 Jazzy</span><span class="chip">Nav2</span><span class="chip">Gazebo</span><span class="chip">gtest</span><span class="chip">pytest</span><span class="chip">GitHub Actions</span></div></div>
+      <div class="stk"><h3>Robotics and testing</h3><div class="chips"><span class="chip">C++</span><span class="chip">Python</span><span class="chip">ROS2 Jazzy</span><span class="chip">Nav2</span><span class="chip">Gazebo</span><span class="chip">Isaac Lab</span><span class="chip">gtest</span><span class="chip">pytest</span><span class="chip">GitHub Actions</span></div></div>
     </div>
   </div>
 </section>
@@ -807,5 +816,8 @@ document.querySelectorAll(".res").forEach(r=>{
   r.querySelectorAll("[data-bar]").forEach(b=>{ b.style.transition = reduce ? "none" : "width 1.2s cubic-bezier(.2,.8,.2,1)"; });
   if(io) io.observe(r); else { r.querySelectorAll("[data-count]").forEach(animate); r.querySelectorAll("[data-bar]").forEach(b=>b.style.width=b.dataset.bar+"%"); }
 });
+</script>
+<script>
+if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches){document.querySelectorAll('video.clip').forEach(function(v){v.removeAttribute('autoplay');v.pause();v.controls=true;});}
 </script>
 </body></html>
